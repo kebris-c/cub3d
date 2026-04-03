@@ -1,24 +1,9 @@
-# *kebris-c & partner-login*
+# *kebris-c & kmarrero*
 
 ## Description
 
-This repository contains a **cub3D skeleton** prepared to continue the mandatory
-part in pairs.  
-It is intentionally **not a full solution**: the structure is ready, parsing and
-rendering entry points exist, and TODO sections mark what remains to implement.
-
-Current state:
-- Project name and build target changed from old `so_long` base to `cub3D`
-- `.cub` extension flow wired in `main`
-- Modular source layout for parser, validation, rendering, input and cleanup
-- Basic placeholder rendering (ceiling/floor bands) to keep the loop testable
-- Example `maps/example.cub` added
-
-What is intentionally pending:
-- Full mandatory parser robustness (all edge cases)
-- Full map closure verification via flood-fill
-- Full DDA raycasting and wall texturing
-- Final collision/gameplay tuning
+This repository contains a **cub3D** prepared to continue the mandatory
+part in pairs.
 
 ## Instructions
 
