@@ -8,7 +8,6 @@ MLX_DIR		= minilibx-linux
 
 MLX_FLAGS	= -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm -lz
 LIBFT_FLAG	= -L$(LIBFT_DIR) -lft
-LIBFT_CFLAGS	= -Wall -Wextra
 
 SRC_DIR		= src
 OBJ_DIR		= objs
@@ -25,7 +24,6 @@ SRCS		=	main.c \
 				image_utils.c \
 				game_cleanup.c \
 				utils.c
-
 OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
 DEPS		= $(OBJS:.o=.d)
 
@@ -34,7 +32,7 @@ DEPS		= $(OBJS:.o=.d)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(MAKE) -C $(LIBFT_DIR) FLAGS="$(LIBFT_CFLAGS)"
+	@$(MAKE) -C $(LIBFT_DIR)
 	@chmod +x "$(MLX_DIR)/configure"
 	@$(MAKE) -C $(MLX_DIR)
 	$(CC) $(OBJS) $(INCLUDES) $(LIBFT_FLAG) $(MLX_FLAGS) -o $(NAME)
