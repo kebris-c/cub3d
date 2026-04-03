@@ -16,7 +16,7 @@ make
 ### Run
 
 ```bash
-./cub3D maps/example.cub
+./cub3D maps/valid.cub
 ```
 
 ### Expected map extension
