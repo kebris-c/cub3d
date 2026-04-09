@@ -8,8 +8,8 @@
 # include <math.h>
 # include <unistd.h>
 
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 1240
+# define WIN_HEIGHT 1080
 # define MOVE_SPEED 0.08
 # define ROT_SPEED 0.05
 
@@ -32,6 +32,14 @@ typedef struct s_image
 	int		line_len;
 	int		endian;
 }	t_image;
+
+typedef struct s_ray
+{
+	double	dir_x;
+	double	dir_y;
+	int		map_x;
+	int		map_y;
+}	t_ray;
 
 typedef struct s_keys
 {
@@ -79,6 +87,7 @@ typedef struct s_game
 	t_image		textures[TEX_COUNT];
 	t_config	cfg;
 	t_player	player;
+	t_ray		rays[WIN_WIDTH];
 	t_keys		keys;
 }	t_game;
 
