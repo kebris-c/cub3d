@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rays.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
+/*   Updated: 2026/04/09 20:40:17 by kjroydev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 static void	precal_camera_factors(double cam_factor[WIN_WIDTH])
@@ -40,8 +52,8 @@ void	hit_calculations(t_game *game)
 	int		x;
 
 	x = 0;
-	delta_dist_x = abs(1 / game->rays[x].dir_x);
-	delta_dist_y = abs(1 / game->rays[x].dir_y);
+	delta_dist_x = fabs(1 / game->rays[x].dir_x);
+	delta_dist_y = fabs(1 / game->rays[x].dir_y);
 }
 
 void	render_frame(t_game *game)
