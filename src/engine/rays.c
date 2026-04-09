@@ -37,9 +37,11 @@ void	hit_calculations(t_game *game)
 	double	delta_dist_y; //distance to the next y-side
 	double	side_dist_x; //initial distance the ray travel for the first x-plane
 	double	side_dist_y; //initial distance the ray travel for the first y-plane
-	double	map_x; //ray position
-	double	map_y; //ray position
+	int		x;
 
+	x = 0;
+	delta_dist_x = abs(1 / game->rays[x].dir_x);
+	delta_dist_y = abs(1 / game->rays[x].dir_y);
 }
 
 void	render_frame(t_game *game)
