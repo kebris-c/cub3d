@@ -6,13 +6,13 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/09 20:40:17 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/11 00:15:29 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-static void	precal_camera_factors(double cam_factor[WIN_WIDTH])
+void	precal_camera_factors(double cam_factor[WIN_WIDTH])
 {
 	int	x;
 
@@ -24,7 +24,7 @@ static void	precal_camera_factors(double cam_factor[WIN_WIDTH])
 	}
 }
 
-static void	create_rays(t_game *game, double cam_factor[WIN_WIDTH])
+void	create_rays(t_game *game, double cam_factor[WIN_WIDTH])
 {
 	double	ray_dir_x;
 	double	ray_dir_y;
@@ -45,15 +45,41 @@ static void	create_rays(t_game *game, double cam_factor[WIN_WIDTH])
 
 void	hit_calculations(t_game *game)
 {
-	double	delta_dist_x; //distance to the next x-side
-	double	delta_dist_y; //distance to the next y-side
-	double	side_dist_x; //initial distance the ray travel for the first x-plane
-	double	side_dist_y; //initial distance the ray travel for the first y-plane
 	int		x;
 
 	x = 0;
-	delta_dist_x = fabs(1 / game->rays[x].dir_x);
-	delta_dist_y = fabs(1 / game->rays[x].dir_y);
+	if (fabs(game->rays[x].dir_x < 1e-6))
+		game->rays[x].delta_dist_x = 1e30;
+	else
+		game->rays[x].delta_dist_x = fabs(1 / game->rays[x].dir_x);
+	if (fabs(game->rays[x].dir_y < 1e-6))
+		game->rays[x].delta_dist_y = 1e30;
+	else
+		game->rays[x].delta_dist_y = fabs(1 / game->rays[x].dir_y);
+	if (game->rays[x].dir_x < 0)
+	{
+		game->rays[x].step_x = -1;
+		game->rays[x].side_dist_x = (game->player.x - game->rays[x].map_x)
+			* game->rays[x].delta_dist_x;
+	}
+	else
+	{
+		game->rays[x].step_x = 1;
+		game->rays[x].side_dist_x = (game->rays[x].map_x + 1.0 - game->player.x)
+			* game->rays[x].delta_dist_x;
+	}
+	if (game->rays[x].dir_y < 0)
+	{
+		game->rays[x].step_y = -1;
+		game->rays[x].side_dist_y = (game->player.y - game->rays[x].map_y)
+			* game->rays[x].delta_dist_y;
+	}
+	else
+	{
+		game->rays[x].step_y = 1;
+		game->rays[x].side_dist_y = (game->rays[x].map_y + 1.0 - game->player.y)
+			* game->rays[x].delta_dist_y;
+	}
 }
 
 void	render_frame(t_game *game)
