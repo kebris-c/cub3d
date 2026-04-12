@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/12 20:04:15 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/12 20:19:08 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
  * 		a direction where the vector never hits an `x` or `y` side of a square in
  * 		the grid.
  */
-static void	pythagoras_tan(t_game *game, int *x)
+static void	calculate_delta_dist(t_game *game, int *x)
 {
 	if (fabs(game->rays[*x].dir_x) < 1e-6)
 		game->rays[*x].delta_dist_x = 1e30;
@@ -51,7 +51,7 @@ static void	pythagoras_tan(t_game *game, int *x)
  * @param x	Integer that determine the vector `x` from the player position.
  * 
  * @note This function must be used at the beginning of the calculations.
- * The vectors are normalized, as well as proportionalized. So the `distance`
+ * The vectors are proportionalized. So the `distance`
  * moving forward will be the same in both axis. The only interrumption will
  * ocurr when in the loop, the `map_x` and `map_y` are != 0 (a wall).
  */
@@ -122,11 +122,12 @@ static void	cast_rays(t_game *game, double cam_factor[WIN_WIDTH])
  * @param game Pointer to the game structure `t_game`, that contains
  * 				the array of rays `t_rays`.
  * @param map Pointer to the information of the map.
+ * @param cam_factor  Wide size of the FOV of the player.
  * @param x	Integer that determine the vector `x` from the player position.
  */
-void	look_for_walls(t_game *game, t_map *map, int *x)
+void	look_for_walls(t_game *game, t_map *map,
+				double cam_factor[WIN_WIDTH], int x)
 {
-	double	cam_factor[WIN_WIDTH];
 	int		hit;
 
 	hit = 0;
@@ -135,19 +136,21 @@ void	look_for_walls(t_game *game, t_map *map, int *x)
 	proyect_vector(game, x);
 	while (hit == 0)
 	{
-		if (game->rays[*x].side_dist_x < game->rays[*x].side_dist_y)
+		if (game->rays[x].side_dist_x < game->rays[x].side_dist_y)
 		{
-			game->rays[*x].side_dist_x += game->rays[*x].delta_dist_x;
-			game->rays[*x].map_x += game->rays[*x].step_x;
-			game->rays[*x].side = 0;
+			game->rays[x].side_dist_x += game->rays[x].delta_dist_x;
+			game->rays[x].map_x += game->rays[x].step_x;
+			game->rays[x].side = 0;
 		}
 		else
 		{
-			game->rays[*x].side_dist_y += game->rays[*x].delta_dist_y;
-			game->rays[*x].map_y += game->rays[*x].step_y;
-			game->rays[*x].side = 1;
+			game->rays[x].side_dist_y += game->rays[x].delta_dist_y;
+			game->rays[x].map_y += game->rays[x].step_y;
+			game->rays[x].side = 1;
 		}
-		if (map.grid[game->rays[*x].map_y][game->rays[*x].map_x] == '1')
-			hit = 1;
+		if (game->rays[x].map_y < 0 || game->rays[x].map_y >= map->height
+			|| game->rays[x].map_x < 0 || game->rays[x].map_x >= map->width)
+			break ;
+		hit = 1;
 	}
 }
