@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/12 20:19:08 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/12 20:21:04 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void	look_for_walls(t_game *game, t_map *map,
 
 	hit = 0;
 	cast_rays(game, cam_factor);
-	pythagoras_tan(game, x);
+	calculate_delta_dist(game, x);
 	proyect_vector(game, x);
 	while (hit == 0)
 	{
