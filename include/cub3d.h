@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/12 19:48:43 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/15 12:01:29 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,9 @@ typedef struct s_image
  */
 typedef struct s_ray
 {
+	/** Leg of the triangule that determines the FOV distance with a wall. */
+	double	perp_dist_wall;
+
 	/** Magnitude the current vector can advance in `x`. */
 	double	delta_dist_x;
 
@@ -101,6 +104,8 @@ typedef struct s_ray
 
 	/** Max lenght in `y`. */
 	int		map_y;
+
+	/** Direction the vector hits the wall in `x` or `y` */
 	int		side;
 }	t_ray;
 
@@ -165,7 +170,7 @@ typedef struct s_player
  * 
  * - player: Player state (position, direction, camera plane).
  * 
- * - rays: Array of rays casted per screen column (raycasting engine).
+ * - ray: Array of rays casted per screen column (raycasting engine).
  * 
  * - keys: Structure storing the current keyboard input state.
  */
@@ -190,7 +195,7 @@ typedef struct s_game
 	t_player	player;
 
 	/** Array of rays casted per screen column (raycasting engine). */
-	t_ray		rays[WIN_WIDTH];
+	t_ray		ray[WIN_WIDTH];
 
 	/** Keyboard keys functions. */
 	t_keys		keys;
@@ -198,7 +203,7 @@ typedef struct s_game
 
 // Engine Functions
 
-void	determine_hit(t_game *game, t_map *map, int *x);
+int		dda_loop(t_game *game, t_map *map, int x);
 void	precal_camera_factors(double cam_factor[WIN_WIDTH]);
 void	render_frame(t_game *game);
 void	move_player(t_game *game);

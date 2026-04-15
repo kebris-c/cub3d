@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/12 20:21:04 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/15 11:58:09 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,16 @@
  * 		a direction where the vector never hits an `x` or `y` side of a square in
  * 		the grid.
  */
-static void	calculate_delta_dist(t_game *game, int *x)
+static void	calculate_delta_dist(t_game *game, int x)
 {
-	if (fabs(game->rays[*x].dir_x) < 1e-6)
-		game->rays[*x].delta_dist_x = 1e30;
+	if (fabs(game->ray[x].dir_x) < 1e-6)
+		game->ray[x].delta_dist_x = 1e30;
 	else
-		game->rays[*x].delta_dist_x = fabs(1 / game->rays[*x].dir_x);
-	if (fabs(game->rays[*x].dir_y) < 1e-6)
-		game->rays[*x].delta_dist_y = 1e30;
+		game->ray[x].delta_dist_x = fabs(1 / game->ray[x].dir_x);
+	if (fabs(game->rays[x].dir_y) < 1e-6)
+		game->ray[x].delta_dist_y = 1e30;
 	else
-		game->rays[*x].delta_dist_y = fabs(1 / game->rays[*x].dir_y);
+		game->ray[x].delta_dist_y = fabs(1 / game->ray[x].dir_y);
 }
 
 /**
@@ -55,31 +55,70 @@ static void	calculate_delta_dist(t_game *game, int *x)
  * moving forward will be the same in both axis. The only interrumption will
  * ocurr when in the loop, the `map_x` and `map_y` are != 0 (a wall).
  */
-static void	proyect_vector(t_game *game, int *x)
+static void	proyect_vector(t_game *game, int x)
 {
-	if (game->rays[*x].dir_x < 0)
+	if (game->ray[x].dir_x < 0)
 	{
-		game->rays[*x].step_x = -1;
-		game->rays[*x].side_dist_x = (game->player.x - game->rays[*x].map_x)
-			* game->rays[*x].delta_dist_x;
+		game->ray[x].step_x = -1;
+		game->ray[x].side_dist_x = (game->player.x - game->ray[x].map_x)
+			* game->ray[x].delta_dist_x;
 	}
 	else
 	{
-		game->rays[*x].step_x = 1;
-		game->rays[*x].side_dist_x = (game->rays[*x].map_x + 1.0
-				- game->player.x) * game->rays[*x].delta_dist_x;
+		game->ray[x].step_x = 1;
+		game->ray[x].side_dist_x = (game->ray[x].map_x + 1.0
+				- game->player.x) * game->ray[x].delta_dist_x;
 	}
-	if (game->rays[*x].dir_y < 0)
+	if (game->ray[x].dir_y < 0)
 	{
-		game->rays[*x].step_y = -1;
-		game->rays[*x].side_dist_y = (game->player.y
-				- game->rays[*x].map_y) * game->rays[*x].delta_dist_y;
+		game->ray[x].step_y = -1;
+		game->ray[x].side_dist_y = (game->player.y
+				- game->ray[x].map_y) * game->ray[x].delta_dist_y;
 	}
 	else
 	{
-		game->rays[*x].step_y = 1;
-		game->rays[*x].side_dist_y = (game->rays[*x].map_y + 1.0
-				- game->player.y) * game->rays[*x].delta_dist_y;
+		game->ray[x].step_y = 1;
+		game->ray[x].side_dist_y = (game->ray[x].map_y + 1.0
+				- game->player.y) * game->ray[x].delta_dist_y;
+	}
+}
+
+/**
+ * @brief Function that begins the raycasting.
+ * 
+ * This determines the perspective betweem the player and the walls. This does
+ * not include objects, doors, enemies or any other objects in the game.
+ * 
+ * @param game Pointer to the game structure `t_game`, that contains
+ * 				the array of rays `t_rays`.
+ * @param map Pointer to the information of the map.
+ * @param cam_factor  Wide size of the FOV of the player.
+ * @param x	Integer that determine the vector `x` from the player position.
+ */
+static void	look_for_walls(t_game *game, t_map *map, int x, int i)
+{
+	while (*i == 0)
+	{
+		if (game->ray[x].side_dist_x < game->ray[x].side_dist_y)
+		{
+			game->ray[x].side_dist_x += game->ray[x].delta_dist_x;
+			game->ray[x].map_x += game->ray[x].step_x;
+			game->ray[x].side = 0;
+		}
+		else
+		{
+			game->ray[x].side_dist_y += game->ray[x].delta_dist_y;
+			game->ray[x].map_y += game->ray[x].step_y;
+			game->ray[x].side = 1;
+		}
+		if (game->ray[x].map_y < 0 || game->ray[x].map_y >= map->height
+			|| game->ray[x].map_x < 0 || game->ray[x].map_x >= map->width)
+		{
+			printf("The vector %d it's out of bounds", x);
+			break ;
+		}
+		if (map->grid[game->ray[x].map_x][game->ray[x].map_y] > 0)
+			*i = 1;
 	}
 }
 
@@ -96,61 +135,56 @@ static void	proyect_vector(t_game *game, int *x)
  * @param cam_factor  Wide size of the FOV of the player.
  * @note the cam_factor cannot be 0, or a allocated space in memory!!
  */
-static void	cast_rays(t_game *game, double cam_factor[WIN_WIDTH])
+void	cast_rays(t_game *game, double cam_factor[WIN_WIDTH])
 {
 	int		x;
 
 	x = 0;
 	while (x < WIN_WIDTH)
 	{
-		game->rays[x].dir_x = game->player.dir_x
+		game->ray[x].dir_x = game->player.dir_x
 			+ game->player.plane_x * cam_factor[x];
-		game->rays[x].dir_y = game->player.dir_y
+		game->ray[x].dir_y = game->player.dir_y
 			+ game->player.plane_y * cam_factor[x];
-		game->rays[x].map_x = (int)game->player.x;
-		game->rays[x].map_y = (int)game->player.y;
+		game->ray[x].map_x = (int)game->player.x;
+		game->ray[x].map_y = (int)game->player.y;
 		x++;
 	}
 }
 
 /**
- * @brief Function that begins the raycasting.
+ * @brief Function that contains every step of the raycasting loop.
  * 
- * This determines the perspective betweem the player and the walls. This does
- * not include objects, doors, enemies or any other objects in the game.
+ * This function contains al the necesary steps in order to calculate
+ * the distance between the player and every wall in the `map->grid`.
+ * This also includes the correction of the fish eye effect, when the
+ * player travels in the world
  * 
  * @param game Pointer to the game structure `t_game`, that contains
  * 				the array of rays `t_rays`.
  * @param map Pointer to the information of the map.
- * @param cam_factor  Wide size of the FOV of the player.
  * @param x	Integer that determine the vector `x` from the player position.
+ * @note `x` needs to be initialized in `0`, the `utils.c` function
+ * that pre calculates the camera width rays does not depend of this value.
  */
-void	look_for_walls(t_game *game, t_map *map,
-				double cam_factor[WIN_WIDTH], int x)
+int	dda_loop(t_game *game, t_map *map, int x)
 {
-	int		hit;
+	int		i;
 
-	hit = 0;
-	cast_rays(game, cam_factor);
+	i = 0;
 	calculate_delta_dist(game, x);
 	proyect_vector(game, x);
-	while (hit == 0)
+	look_for_walls(game, map, x, &i);
+	if (i == 1)
 	{
-		if (game->rays[x].side_dist_x < game->rays[x].side_dist_y)
-		{
-			game->rays[x].side_dist_x += game->rays[x].delta_dist_x;
-			game->rays[x].map_x += game->rays[x].step_x;
-			game->rays[x].side = 0;
-		}
+		if (game->ray[x].side == 0)
+			game->ray[x].perp_dist_wall = game->ray[x].side_dist_x
+				- game->ray[x].delta_dist_x;
 		else
-		{
-			game->rays[x].side_dist_y += game->rays[x].delta_dist_y;
-			game->rays[x].map_y += game->rays[x].step_y;
-			game->rays[x].side = 1;
-		}
-		if (game->rays[x].map_y < 0 || game->rays[x].map_y >= map->height
-			|| game->rays[x].map_x < 0 || game->rays[x].map_x >= map->width)
-			break ;
-		hit = 1;
+			game->ray[x].perp_dist_wall = game->ray[x].side_dist_y
+				- game->ray[x].delta_dist_y;
+		return (0);
 	}
+	else
+		return (1);
 }

@@ -6,11 +6,19 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/12 20:07:54 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/15 12:06:12 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+/** 
+ * @brief 
+ */
+void	calculate_wall_height(t_game *game)
+{
+	continue ;
+}
 
 /*
 * TODO (renderer): Implement DDA raycasting and textured wall slices.
