@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/15 12:06:12 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:17:08 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,33 @@
 /** 
  * @brief 
  */
-void	calculate_wall_height(t_game *game)
+static void	calculate_line_height(t_ray *ray, int x)
 {
-	continue ;
+	int	draw_start;
+	int	draw_end;
+	int	h;
+
+	h = WIN_HEIGHT;
+	ray->line_height[x] = (int)(h / ray->perp_dist_wall);
+	draw_start = (-ray->line_height[x] / 2) + (h / 2);
+}
+
+void	map_raycasting(t_game *game, t_map *map)
+{
+	double	cam_factor[WIN_WIDTH];
+	t_ray	*ray;
+	int		x;
+
+	x = 0;
+	precal_camera_factors(cam_factor);
+	while (x < WIN_WIDTH)
+	{
+		ray = &game->ray[x];
+		cast_rays(game, ray, cam_factor[x]);
+		dda_loop(ray, map, x);
+		calculate_line_height(ray, game, x);
+		x++;
+	}
 }
 
 /*

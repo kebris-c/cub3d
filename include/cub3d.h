@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/15 12:01:29 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/17 15:07:34 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,23 @@
 # define WIN_HEIGHT 1080
 # define MOVE_SPEED 0.08
 # define ROT_SPEED 0.05
+# define MAX_STEPS 500
 
 typedef enum e_tex_id
 {
-	TEX_NO = 0,
-	TEX_SO = 1,
-	TEX_WE = 2,
-	TEX_EA = 3,
-	TEX_COUNT = 4
+	TEX_NO,
+	TEX_SO,
+	TEX_WE,
+	TEX_EA,
+	TEX_COUNT
 }	t_tex_id;
+
+typedef enum e_hit_state
+{
+	HIT_NONE,
+	HIT_WALL,
+	HIT_OOB
+}	t_hit_state;
 
 typedef struct s_image
 {
@@ -73,7 +81,7 @@ typedef struct s_image
 typedef struct s_ray
 {
 	/** Leg of the triangule that determines the FOV distance with a wall. */
-	double	perp_dist_wall;
+	double	perp_dist_wall[WIN_WIDTH];
 
 	/** Magnitude the current vector can advance in `x`. */
 	double	delta_dist_x;
@@ -86,6 +94,12 @@ typedef struct s_ray
 
 	/** Distance between vector and player in `y`. */
 	double	side_dist_y;
+
+	/** Location of player in `x`. */
+	double	player_x;
+
+	/** Location of player in `y`. */
+	double	player_y;
 
 	/** Direction of the vector in `x`. */
 	double	dir_x;
@@ -107,6 +121,8 @@ typedef struct s_ray
 
 	/** Direction the vector hits the wall in `x` or `y` */
 	int		side;
+
+	int		line_height[WIN_WIDTH];
 }	t_ray;
 
 typedef struct s_keys
@@ -203,8 +219,10 @@ typedef struct s_game
 
 // Engine Functions
 
-int		dda_loop(t_game *game, t_map *map, int x);
-void	precal_camera_factors(double cam_factor[WIN_WIDTH]);
+void	map_raycasting(t_game *game, t_map *map);
+void	precal_camera_factors(double cam_factor);
+void	cast_rays(t_game *game, t_ray *ray, double cam_factor);
+int		dda_loop(t_ray *ray, t_map *map);
 void	render_frame(t_game *game);
 void	move_player(t_game *game);
 

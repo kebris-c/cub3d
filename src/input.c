@@ -36,9 +36,11 @@ int	key_release(int keycode, t_game *game)
 	return (0);
 }
 
-int	game_loop(t_game *game)
+int	game_loop(t_game *game, t_map *map)
 {
 	move_player(game);
+	update_player_pos(void);
+	map_raycasting(game, map);
 	render_frame(game);
 	return (0);
 }

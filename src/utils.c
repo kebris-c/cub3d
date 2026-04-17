@@ -17,7 +17,7 @@ int	is_walkable(t_map *map, double x, double y)
 	return (map->grid[cell_y][cell_x] == '0');
 }
 
-void	precal_camera_factors(double cam_factor[WIN_WIDTH])
+void	precal_camera_factors(double cam_factor)
 {
 	int	x;
 
