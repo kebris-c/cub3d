@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/17 15:07:34 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/18 19:20:08 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 # define MOVE_SPEED 0.08
 # define ROT_SPEED 0.05
 # define MAX_STEPS 500
+# define SKY_COLOR 0x87CEEB
+# define FLOOR_COLOR 0x654321
 
 typedef enum e_tex_id
 {
@@ -222,7 +224,7 @@ typedef struct s_game
 void	map_raycasting(t_game *game, t_map *map);
 void	precal_camera_factors(double cam_factor);
 void	cast_rays(t_game *game, t_ray *ray, double cam_factor);
-int		dda_loop(t_ray *ray, t_map *map);
+int		dda_loop(t_ray *ray, t_map *map, int x);
 void	render_frame(t_game *game);
 void	move_player(t_game *game);
 

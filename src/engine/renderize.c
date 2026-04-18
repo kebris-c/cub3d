@@ -6,14 +6,22 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/17 21:43:22 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/18 20:17:55 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 /** 
- * @brief 
+ * @brief Function that calculates the height of the walls.
+ * 
+ * This Function creates the Z-Buffer that will contain the height
+ * and `perp_dist_wall` for each vector `x` from the player. This renderize
+ * the wall at the correct perspective from the player, based
+ * in the inverse of `perp_dist_wall`, calculating the leg of a triangule.
+ * @param ray `t_ray` struct containing the information of vector `x`
+ * @param x integer that represent to identify a vector in the array
+ * of vectors.
  */
 static void	calculate_line_height(t_ray *ray, int x)
 {
@@ -46,6 +54,29 @@ void	map_raycasting(t_game *game, t_map *map)
 		dda_loop(ray, map, x);
 		calculate_line_height(ray, game, x);
 		x++;
+	}
+}
+
+void	renderize_roof_floor(t_ray *ray, t_game *game)
+{
+	t_image	*frame;
+	int		x;
+	int		y;
+
+	frame = &game->frame;
+	y = 0;
+	while (y < WIN_HEIGHT)
+	{
+		x = 0;
+		while (x < WIN_WIDTH)
+		{
+			if (y < WIN_HEIGHT / 2)
+				put_pixel(frame, x, y, SKY_COLOR);
+			else
+				put_pixel(frame, x, y, FLOOR_COLOR);
+			x++;
+		}
+		y++;
 	}
 }
 
