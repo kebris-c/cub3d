@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/17 15:05:35 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/18 20:22:54 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,6 @@ int	dda_loop(t_ray *ray, t_map *map, int x)
 				- ray->delta_dist_y;
 	}
 	else
-		ray->perp_dist_wall = 1e30;
+		ray->perp_dist_wall[x] = 1e30;
 	return (0);
 }
