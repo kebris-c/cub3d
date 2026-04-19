@@ -1,5 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
+/*   Updated: 2026/04/20 00:00:00 by kebris-c       ###   ########.fr         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
+/*
+** Shared helpers for the .cub parser: stderr errors, line trimming,
+** blank-line detection, and trivial path checks used before opening files.
+*/
 int	error_msg(const char *msg)
 {
 	ft_putstr_fd("Error\n", 2);

@@ -16,8 +16,8 @@ void	ft_putstr_fd(char *str, int std)
 {
 	int	i;
 
-	if (str < 0)
-		std = 1;
+	if (!str)
+		return ;
 	i = 0;
 	while (str[i])
 	{

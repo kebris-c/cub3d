@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movement.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
+/*   Updated: 2026/04/20 00:00:00 by kebris-c       ###   ########.fr         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 static void	rotate_player(t_game *game, double angle)
@@ -8,7 +20,8 @@ static void	rotate_player(t_game *game, double angle)
 	old_dir_x = game->player.dir_x;
 	game->player.dir_x = game->player.dir_x * cos(angle)
 		- game->player.dir_y * sin(angle);
-	game->player.dir_y = old_dir_x * sin(angle) + game->player.dir_y * cos(angle);
+	game->player.dir_y = old_dir_x * sin(angle)
+		+ game->player.dir_y * cos(angle);
 	old_plane_x = game->player.plane_x;
 	game->player.plane_x = game->player.plane_x * cos(angle)
 		- game->player.plane_y * sin(angle);
@@ -46,27 +59,25 @@ static void	move_strafe(t_game *game, double speed)
 		game->player.y = new_y;
 }
 
+static void	apply_move_keys(t_game *game)
+{
+	if (game->keys.w)
+		move_forward_backward(game, MOVE_SPEED);
+	if (game->keys.s)
+		move_forward_backward(game, -MOVE_SPEED);
+	if (game->keys.a)
+		move_strafe(game, -MOVE_SPEED);
+	if (game->keys.d)
+		move_strafe(game, MOVE_SPEED);
+	if (game->keys.left)
+		rotate_player(game, -ROT_SPEED);
+	if (game->keys.right)
+		rotate_player(game, ROT_SPEED);
+}
+
 void	move_player(t_game *game)
 {
-	/*
-	** Skeleton movement:
-	** Keep keyboard plumbing in place, but leave real movement/collision tuning
-	** to your implementation pass.
-	*/
 	if (game->keys.w || game->keys.s || game->keys.a || game->keys.d
 		|| game->keys.left || game->keys.right)
-	{
-		if (game->keys.w)
-			move_forward_backward(game, MOVE_SPEED);
-		if (game->keys.s)
-			move_forward_backward(game, -MOVE_SPEED);
-		if (game->keys.a)
-			move_strafe(game, -MOVE_SPEED);
-		if (game->keys.d)
-			move_strafe(game, MOVE_SPEED);
-		if (game->keys.left)
-			rotate_player(game, -ROT_SPEED);
-		if (game->keys.right)
-			rotate_player(game, ROT_SPEED);
-	}
+		apply_move_keys(game);
 }

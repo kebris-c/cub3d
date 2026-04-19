@@ -12,6 +12,21 @@
 
 #include "cub3d.h"
 
+static int	set_default_colors_if_missing(t_game *game)
+{
+	if (game->cfg.floor_color == -1)
+		game->cfg.floor_color = rgb_to_int(60, 60, 60);
+	if (game->cfg.ceil_color == -1)
+		game->cfg.ceil_color = rgb_to_int(120, 120, 180);
+	return (EXIT_SUCCESS);
+}
+
+static int	load_textures_skeleton(t_game *game)
+{
+	(void)game;
+	return (EXIT_SUCCESS);
+}
+
 int	init_game(t_game *game)
 {
 	game->mlx = mlx_init();

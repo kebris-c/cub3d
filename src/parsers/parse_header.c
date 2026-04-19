@@ -1,10 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_header.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
+/*   Updated: 2026/04/20 00:00:00 by kebris-c       ###   ########.fr         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 /*
-** Skeleton parser:
-** - Keeps identifier dispatch and duplicate checks.
-** - Leaves strict subject validation (RGB edge cases, path checks, etc.)
-**   for your implementation phase.
+** Header section: NO/SO/WE/EA texture paths, F/C RGB triplets, duplicate
+** detection. Strict path/XPM checks belong in a later validation pass.
 */
 static int	assign_texture_skeleton(t_config *cfg, int id, const char *value)
 {

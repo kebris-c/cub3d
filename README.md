@@ -30,6 +30,10 @@ For mandatory cub3D:
 - Texture files should be `.xpm`
 - In this skeleton, texture loading is left as a TODO module
 
+### Source layout
+
+Sources live under `src/<feature>/` and the shared header is `include/core/cub3d.h`.
+
 ### Suggested work split (2 people)
 
 1. **Parser/validation owner**
