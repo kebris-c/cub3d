@@ -16,7 +16,7 @@ make
 ### Run
 
 ```bash
-./cub3D maps/example.cub
+./cub3D maps/valid.cub
 ```
 
 ### Expected map extension
@@ -29,6 +29,10 @@ For mandatory cub3D:
 - Header identifiers: `NO`, `SO`, `WE`, `EA`
 - Texture files should be `.xpm`
 - In this skeleton, texture loading is left as a TODO module
+
+### Source layout
+
+Sources live under `src/<feature>/` and the shared header is `include/core/cub3d.h`.
 
 ### Suggested work split (2 people)
 

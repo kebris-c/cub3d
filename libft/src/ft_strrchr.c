@@ -14,10 +14,8 @@
 
 char	*ft_strrchr(const char *str, int c)
 {
-	char	*value;
 	size_t	len;
 
-	value = NULL;
 	len = ft_strlen(str);
 	str = str + len;
 	if ((char)c == '\0')

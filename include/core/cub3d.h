@@ -222,18 +222,20 @@ typedef struct s_game
 // Engine Functions
 
 void	map_raycasting(t_game *game, t_map *map);
-void	precal_camera_factors(double cam_factor);
+void	precal_camera_factors(double *cam_factor);
 void	cast_rays(t_game *game, t_ray *ray, double cam_factor);
 int		dda_loop(t_ray *ray, t_map *map, int x);
 void	render_frame(t_game *game);
 void	move_player(t_game *game);
 
 int		parse_cub_file(t_config *cfg, const char *path);
+int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
 int		parse_header_line(t_config *cfg, const char *line);
 int		headers_complete(t_config *cfg);
 int		validate_map(t_config *cfg);
 int		init_game(t_game *game);
-int		game_loop(t_game *game);
+void	init_player(t_game *game);
+int		game_loop(void *param);
 int		key_press(int keycode, t_game *game);
 int		key_release(int keycode, t_game *game);
 int		close_window(t_game *game);

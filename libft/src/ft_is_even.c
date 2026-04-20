@@ -14,7 +14,7 @@
 
 t_bool	ft_is_even(int nbr)
 {
-	if (EVEN(nbr))
+	if (nbr % 2 == 0)
 		return (TRUE);
 	return (FALSE);
 }
