@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 10:52:03 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 13:09:47 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	calculate_line_height(t_ray *ray, double *z_buffer)
 		ray->draw_end = h - 1;
 }
 
-void	renderize_roof_floor(t_image *frame)
+void	renderize_roof_floor(t_game *game)
 {
 	int	win_middle;
 	int	x;
@@ -52,13 +52,14 @@ void	renderize_roof_floor(t_image *frame)
 		while (x < WIN_WIDTH)
 		{
 			if (y < win_middle)
-				put_pixel(frame, x, y, SKY_COLOR);
+				put_pixel(&game->frame, x, y, SKY_COLOR);
 			else
-				put_pixel(frame, x, y, FLOOR_COLOR);
+				put_pixel(&game->frame, x, y, FLOOR_COLOR);
 			x++;
 		}
 		y++;
 	}
+	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 }
 
 void	render_frame(t_ray *ray, t_image *img, t_game *game)

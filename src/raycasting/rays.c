@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 10:32:37 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 12:47:36 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,8 @@ void	cast_rays(t_player *player, t_ray *ray, double cam_factor)
 {
 	ray->dir_x = player->dir_x + player->plane_x * cam_factor;
 	ray->dir_y = player->dir_y + player->plane_y * cam_factor;
+	ray->player_x = player->x;
+	ray->player_y = player->y;
 	ray->map_x = (int)player->x;
 	ray->map_y = (int)player->y;
 }

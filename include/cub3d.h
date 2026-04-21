@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 10:46:35 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 13:10:20 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,7 +240,7 @@ void	cast_rays(t_player *player, t_ray *ray, double cam_factor);
 int		dda_loop(t_ray *ray, t_map *map);
 void	render_frame(t_ray *ray, t_image *img, t_game *game);
 void	move_player(t_game *game);
-void	renderize_roof_floor(t_image *frame);
+void	renderize_roof_floor(t_game *game);
 
 int		parse_cub_file(t_config *cfg, const char *path);
 int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
