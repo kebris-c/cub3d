@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 12:47:36 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 14:29:25 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void	proyect_vector(t_ray *ray)
  * 
  * @param ray Pointer to the structure `t_ray`, that contains
  * 				the array of rays.
- * @param map Pointer to the information of the map.
+ * @param map Pointer to the information of the map.d
  * @param cam_factor  Wide size of the FOV of the player.
  * @param i	Integer that represents a iterator. This controls the loop
  * and prevents infinte proyection.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_map_grid.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
-/*   Updated: 2026/04/20 00:00:00 by kebris-c       ###   ########.fr         */
+/*   Created: 2026/04/20 00:00:00 by kebris-c          #+#    #+#             */
+/*   Updated: 2026/04/21 13:27:30 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	fill_row_from_line(t_config *cfg, char **lines, int start, int i)
 		if ((size_t)j < len)
 			cfg->map.grid[i][j] = lines[start + i][j];
 		else
-			cfg->map.grid[i][j] = ' ';
+			cfg->map.grid[i][j] = '0';
 		j++;
 	}
 	return (EXIT_SUCCESS);

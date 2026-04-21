@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 00:00:00 by kebris-c          #+#    #+#             */
-/*   Updated: 2026/04/21 10:48:44 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 13:52:55 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ int	game_loop(void *param)
 	t_game	*game;
 
 	game = (t_game *)param;
+	renderize_roof_floor(game);
 	move_player(game);
-	map_raycasting(game, game->map);
-	render_frame(game->ray, game->frame.img, game);
+	map_raycasting(game, &game->cfg.map);
+	render_frame(game->ray, &game->frame, game);
 	return (0);
 }
