@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
-/*   Updated: 2026/04/20 00:00:00 by kebris-c       ###   ########.fr         */
+/*   Created: 2026/04/20 00:00:00 by kebris-c          #+#    #+#             */
+/*   Updated: 2026/04/21 10:48:44 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	game_loop(void *param)
 
 	game = (t_game *)param;
 	move_player(game);
-	render_frame(game);
+	map_raycasting(game, game->map);
+	render_frame(game->ray, game->frame.img, game);
 	return (0);
 }

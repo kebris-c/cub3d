@@ -1,8 +1,8 @@
 NAME		= cub3D
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -MMD -MP
+CFLAGS		= -Wall -Wextra -Werror -MMD -MP -g
 
-INCLUDES	= -Iinclude -Iinclude/core -Ilibft/include -Iminilibx-linux
+INCLUDES	= -Iinclude -Iinclude -Ilibft/include -Iminilibx-linux
 LIBFT_DIR	= libft
 MLX_DIR		= minilibx-linux
 LIBFT_A		= $(LIBFT_DIR)/libft.a
@@ -17,20 +17,20 @@ OBJ_DIR		= objs
 MAIN_SRC	= src/core/main.c
 MAIN_OBJ	= $(OBJ_DIR)/src/core/main.o
 
-SRCS		=	src/common/utils.c \
-				src/parsers/parse_utils.c \
-				src/parsers/parse_header.c \
-				src/parsers/parse_map_grid.c \
-				src/parsers/parse_map.c \
-				src/io/file_loader.c \
-				src/validate/map_validate.c \
-				src/render/render.c \
-				src/render/image_utils.c \
-				src/input/input.c \
-				src/movement/movement.c \
-				src/lifecycle/game_cleanup.c \
-				src/init/game.c \
-				src/init/player.c
+SRCS		=	src/common/utils.c				\
+				src/init/game.c					\
+				src/init/player.c				\
+				src/input/input.c				\
+				src/io/file_loader.c			\
+				src/lifecycle/game_cleanup.c	\
+				src/movement/movement.c			\
+				src/parsers/parse_utils.c 		\
+				src/parsers/parse_header.c 		\
+				src/parsers/parse_map_grid.c	\
+				src/parsers/parse_map.c			\
+				src/raycasting/rays.c			\
+				src/render/render.c				\
+				src/validate/map_validate.c		
 
 OBJS		= $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS		= $(OBJS:.o=.d) $(MAIN_OBJ:.o=.d)

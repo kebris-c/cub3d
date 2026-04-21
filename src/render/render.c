@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/20 21:19:45 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 10:52:03 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,19 @@
  * @param x integer that represent to identify a vector in the array
  * of vectors.
  */
-static void	calculate_line_height(t_ray *ray, t_render *render, int x)
+static void	calculate_line_height(t_ray *ray, double *z_buffer)
 {
-	int	draw_start;
-	int	draw_end;
 	int	h;
 
 	h = WIN_HEIGHT;
-	render->z_buffer[x] = ray->perp_dist_wall[x];
-	ray->line_height[x] = (int)(h / ray->perp_dist_wall[x]);
-	ray->draw_start[x] = (-ray->line_height[x] / 2) + (h / 2);
-	if (ray->draw_start[x] < 0)
-		ray->draw_start[x] = 0;
-	ray->draw_end[x] = (ray->perp_dist_wall[x] / 2) + (h / 2);
-	if (ray->draw_end[x] >= h)
-		ray->draw_end[x] = h - 1;
+	*z_buffer = ray->perp_dist_wall;
+	ray->line_height = (int)(h / ray->perp_dist_wall);
+	ray->draw_start = (-ray->line_height / 2) + (h / 2);
+	if (ray->draw_start < 0)
+		ray->draw_start = 0;
+	ray->draw_end = (ray->perp_dist_wall / 2) + (h / 2);
+	if (ray->draw_end >= h)
+		ray->draw_end = h - 1;
 }
 
 void	renderize_roof_floor(t_image *frame)
@@ -63,39 +61,42 @@ void	renderize_roof_floor(t_image *frame)
 	}
 }
 
-void	render_frame(t_ray *ray, t_image *img, int x)
+void	render_frame(t_ray *ray, t_image *img, t_game *game)
 {
 	int	x;
 	int	y;
 
 	x = 0;
-	y = ray->draw_start[x];
-	while (y < ray->draw_end[x])
+	while (x < WIN_WIDTH)
 	{
-		if (ray->side == 0)
-			put_pixel(img, x, y, 0x00FF00);
-		else
-			put_pixel(img, x, y, 0xFF0000);
-		y++;
+		y = ray[x].draw_start;
+		while (y < ray[x].draw_end)
+		{
+			if (ray[x].side == 0)
+				put_pixel(img, x, y, 0x00FF00);
+			else
+				put_pixel(img, x, y, 0xFF0000);
+			y++;
+		}
+		x++;
 	}
 	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 }
 
 void	map_raycasting(t_game *game, t_map *map)
 {
-	double	cam_factor[WIN_WIDTH];
-	t_ray	*ray;
-	int		x;
+	double		cam_factor[WIN_WIDTH];
+	t_ray		*ray;
+	int			x;
 
 	x = 0;
 	precal_camera_factors(cam_factor);
 	while (x < WIN_WIDTH)
 	{
 		ray = &game->ray[x];
-		cast_rays(game, ray, cam_factor[x]);
-		dda_loop(ray, map, x);
-		calculate_line_height(ray, &game->render, x);
-		render_frame(ray, &game->render, x);
+		cast_rays(&game->player, ray, cam_factor[x]);
+		dda_loop(ray, map);
+		calculate_line_height(ray, &game->render.z_buffer[x]);
 		x++;
 	}
 }

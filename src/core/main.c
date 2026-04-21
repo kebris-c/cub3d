@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
-/*   Updated: 2026/04/20 00:00:00 by kebris-c       ###   ########.fr         */
+/*   Created: 2026/04/20 00:00:00 by kebris-c          #+#    #+#             */
+/*   Updated: 2026/04/21 10:47:07 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	main(int argc, char **argv)
 	if (parse_and_init_graphics(game, argv[1]) == EXIT_FAILURE)
 		return (cleanup_game(game), free_game_struct(game), EXIT_FAILURE);
 	register_hooks(game);
+	renderize_roof_floor(&game->frame);
 	mlx_loop(game->mlx);
 	cleanup_game(game);
 	free_game_struct(game);

@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/20 20:25:24 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 10:32:37 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,12 @@ static t_hit_state	look_for_walls(t_ray *ray, t_map *map, int i)
  * @param cam_factor  Wide size of the FOV of the player.
  * @note the cam_factor cannot be 0, or a allocated space in memory!!
  */
-void	cast_rays(t_game *game, t_ray *ray, double cam_factor)
+void	cast_rays(t_player *player, t_ray *ray, double cam_factor)
 {
-	ray->dir_x = game->player.dir_x + game->player.plane_x * cam_factor;
-	ray->dir_y = game->player.dir_y + game->player.plane_y * cam_factor;
-	ray->map_x = (int)game->player.x;
-	ray->map_y = (int)game->player.y;
+	ray->dir_x = player->dir_x + player->plane_x * cam_factor;
+	ray->dir_y = player->dir_y + player->plane_y * cam_factor;
+	ray->map_x = (int)player->x;
+	ray->map_y = (int)player->y;
 }
 
 /**
@@ -160,7 +160,7 @@ void	cast_rays(t_game *game, t_ray *ray, double cam_factor)
  * 				the array of rays.
  * @param map Pointer to the information of the map.
  */
-int	dda_loop(t_ray *ray, t_map *map, int x)
+int	dda_loop(t_ray *ray, t_map *map)
 {
 	t_hit_state	state;
 
@@ -170,13 +170,13 @@ int	dda_loop(t_ray *ray, t_map *map, int x)
 	if (state == HIT_WALL)
 	{
 		if (ray->side == 0)
-			ray->perp_dist_wall[x] = ray->side_dist_x
+			ray->perp_dist_wall = ray->side_dist_x
 				- ray->delta_dist_x;
 		else
-			ray->perp_dist_wall[x] = ray->side_dist_y
+			ray->perp_dist_wall = ray->side_dist_y
 				- ray->delta_dist_y;
 	}
 	else
-		ray->perp_dist_wall[x] = 1e30;
+		ray->perp_dist_wall = 1e30;
 	return (0);
 }

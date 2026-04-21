@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/20 20:55:39 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/21 10:46:35 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ typedef struct s_image
 typedef struct s_ray
 {
 	/** Leg of the triangule that determines the FOV distance with a wall. */
-	double	perp_dist_wall[WIN_WIDTH];
+	double	perp_dist_wall;
 
 	/** Magnitude the current vector can advance in `x`. */
 	double	delta_dist_x;
@@ -124,11 +124,11 @@ typedef struct s_ray
 	/** Direction the vector hits the wall in `x` or `y` */
 	int		side;
 
-	int		line_height[WIN_HEIGHT];
+	int		line_height;
 
-	int		draw_start[WIN_WIDTH];
+	int		draw_start;
 	
-	int		draw_end[WIN_WIDTH];
+	int		draw_end;
 }	t_ray;
 
 typedef struct s_render
@@ -228,16 +228,19 @@ typedef struct s_game
 	t_keys		keys;
 
 	t_render	render;
+
+	t_map		*map;
 }	t_game;
 
 // Engine Functions
 
 void	map_raycasting(t_game *game, t_map *map);
 void	precal_camera_factors(double *cam_factor);
-void	cast_rays(t_game *game, t_ray *ray, double cam_factor);
-int		dda_loop(t_ray *ray, t_map *map, int x);
-void	render_frame(t_game *game);
+void	cast_rays(t_player *player, t_ray *ray, double cam_factor);
+int		dda_loop(t_ray *ray, t_map *map);
+void	render_frame(t_ray *ray, t_image *img, t_game *game);
 void	move_player(t_game *game);
+void	renderize_roof_floor(t_image *frame);
 
 int		parse_cub_file(t_config *cfg, const char *path);
 int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
