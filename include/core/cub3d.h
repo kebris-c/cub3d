@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/18 19:20:08 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/20 20:55:39 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,17 @@ typedef struct s_ray
 	/** Direction the vector hits the wall in `x` or `y` */
 	int		side;
 
-	int		line_height[WIN_WIDTH];
+	int		line_height[WIN_HEIGHT];
+
+	int		draw_start[WIN_WIDTH];
+	
+	int		draw_end[WIN_WIDTH];
 }	t_ray;
+
+typedef struct s_render
+{
+	double	z_buffer[WIN_WIDTH];
+}	t_render;
 
 typedef struct s_keys
 {
@@ -217,6 +226,8 @@ typedef struct s_game
 
 	/** Keyboard keys functions. */
 	t_keys		keys;
+
+	t_render	render;
 }	t_game;
 
 // Engine Functions

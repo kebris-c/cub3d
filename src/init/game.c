@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/17 12:57:22 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/17 13:01:07 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/20 21:14:03 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ int	init_game(t_game *game)
 			&game->frame.line_len, &game->frame.endian);
 	if (!game->frame.addr)
 		return (error_msg("failed to read frame buffer"));
-	if (set_default_colors_if_missing(game) == EXIT_FAILURE)
-		return (EXIT_FAILURE);
 	if (load_textures_skeleton(game) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	init_player(game);

@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/18 20:22:54 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/20 20:25:24 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,12 +163,10 @@ void	cast_rays(t_game *game, t_ray *ray, double cam_factor)
 int	dda_loop(t_ray *ray, t_map *map, int x)
 {
 	t_hit_state	state;
-	int			i;
 
-	i = 0;
 	calculate_delta_dist(ray);
 	proyect_vector(ray);
-	state = look_for_walls(ray, map, i);
+	state = look_for_walls(ray, map, 0);
 	if (state == HIT_WALL)
 	{
 		if (ray->side == 0)
