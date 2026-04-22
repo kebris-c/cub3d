@@ -6,12 +6,16 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 14:15:07 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/22 20:39:36 by kebris-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
 # define CUB3D_H
+
+/* -------------------------------------------------------------------------- */
+/*   System and project includes                                              */
+/* -------------------------------------------------------------------------- */
 
 # include "libft.h"
 # include "mlx.h"
@@ -20,6 +24,10 @@
 # include <math.h>
 # include <unistd.h>
 
+/* -------------------------------------------------------------------------- */
+/*   Macros                                                                   */
+/* -------------------------------------------------------------------------- */
+
 # define WIN_WIDTH 720
 # define WIN_HEIGHT 460
 # define MOVE_SPEED 0.015
@@ -27,6 +35,10 @@
 # define MAX_STEPS 500
 # define SKY_COLOR 0x87CEEB
 # define FLOOR_COLOR 0x654321
+
+/* -------------------------------------------------------------------------- */
+/*   Enumeration types                                                        */
+/* -------------------------------------------------------------------------- */
 
 typedef enum e_tex_id
 {
@@ -43,6 +55,10 @@ typedef enum e_hit_state
 	HIT_WALL,
 	HIT_OOB
 }	t_hit_state;
+
+/* -------------------------------------------------------------------------- */
+/*   Structure types                                                          */
+/* -------------------------------------------------------------------------- */
 
 typedef struct s_image
 {
@@ -127,7 +143,7 @@ typedef struct s_ray
 	int		line_height;
 
 	int		draw_start;
-	
+
 	int		draw_end;
 }	t_ray;
 
@@ -231,40 +247,59 @@ typedef struct s_game
 
 }	t_game;
 
-// Engine Functions
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — void                                               */
+/* -------------------------------------------------------------------------- */
 
-void	map_raycasting(t_game *game, t_map *map);
-void	precal_camera_factors(double *cam_factor);
 void	cast_rays(t_player *player, t_ray *ray, double cam_factor);
-int		dda_loop(t_ray *ray, t_map *map);
-void	render_frame(t_ray *ray, t_image *img, t_game *game);
+void	cleanup_game(t_game *game);
+void	cub_signals_install(void);
+void	cub_signals_restore(void);
+void	free_config(t_config *cfg);
+void	free_lines(char **lines);
+void	init_player(t_game *game);
+void	map_raycasting(t_game *game, t_map *map);
 void	move_player(t_game *game);
+void	precal_camera_factors(double *cam_factor);
+void	put_pixel(t_image *img, int x, int y, int color);
+void	render_frame(t_ray *ray, t_image *img, t_game *game);
 void	renderize_roof_floor(t_game *game);
 
-int		parse_cub_file(t_config *cfg, const char *path);
-int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
-int		parse_header_line(t_config *cfg, const char *line);
-int		headers_complete(t_config *cfg);
-int		validate_map(t_config *cfg);
-int		init_game(t_game *game);
-void	init_player(t_game *game);
-int		game_loop(void *param);
-int		key_press(int keycode, t_game *game);
-int		key_release(int keycode, t_game *game);
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — int                                                */
+/* -------------------------------------------------------------------------- */
+
 int		close_window(t_game *game);
-void	cleanup_game(t_game *game);
+int		cub_signal_stop_requested(void);
+int		dda_loop(t_ray *ray, t_map *map);
 int		error_msg(const char *msg);
-int		rgb_to_int(int r, int g, int b);
 int		file_has_extension(const char *file, const char *ext);
-int		load_file_lines(const char *path, char ***lines);
-void	free_lines(char **lines);
+int		game_loop(void *param);
+int		get_texel(t_image *img, int x, int y);
+int		headers_complete(t_config *cfg);
+int		init_game(t_game *game);
 int		is_blank_line(const char *line);
 int		is_map_line(const char *line);
-size_t	line_len_no_nl(const char *line);
-char	*trim_spaces(const char *line);
-void	put_pixel(t_image *img, int x, int y, int color);
-int		get_texel(t_image *img, int x, int y);
 int		is_walkable(t_map *map, double x, double y);
-void	free_config(t_config *cfg);
+int		key_press(int keycode, t_game *game);
+int		key_release(int keycode, t_game *game);
+int		load_file_lines(const char *path, char ***lines);
+int		parse_cub_file(t_config *cfg, const char *path);
+int		parse_header_line(t_config *cfg, const char *line);
+int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
+int		rgb_to_int(int r, int g, int b);
+int		validate_map(t_config *cfg);
+
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — char *                                             */
+/* -------------------------------------------------------------------------- */
+
+char	*trim_spaces(const char *line);
+
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — size_t                                             */
+/* -------------------------------------------------------------------------- */
+
+size_t	line_len_no_nl(const char *line);
 
 #endif

@@ -78,7 +78,7 @@ void	cleanup_game(t_game *game)
 
 int	close_window(t_game *game)
 {
-	cleanup_game(game);
-	exit(EXIT_SUCCESS);
+	if (game && game->mlx)
+		mlx_loop_end(game->mlx);
 	return (0);
 }

@@ -23,6 +23,7 @@ SRCS		=	src/common/utils.c				\
 				src/input/input.c				\
 				src/io/file_loader.c			\
 				src/lifecycle/game_cleanup.c	\
+				src/lifecycle/signals.c			\
 				src/movement/movement.c			\
 				src/parsers/parse_utils.c 		\
 				src/parsers/parse_header.c 		\

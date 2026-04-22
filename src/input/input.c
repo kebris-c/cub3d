@@ -53,6 +53,11 @@ int	game_loop(void *param)
 	t_game	*game;
 
 	game = (t_game *)param;
+	if (cub_signal_stop_requested())
+	{
+		mlx_loop_end(game->mlx);
+		return (0);
+	}
 	renderize_roof_floor(game);
 	move_player(game);
 	map_raycasting(game, &game->cfg.map);

@@ -6,16 +6,54 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 00:00:00 by kebris-c          #+#    #+#             */
-/*   Updated: 2026/04/21 13:27:30 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/22 00:00:00 by kebris-c        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
 /*
-** Map grid construction: scan map lines for max width, reject inner blanks,
-** pad short rows with spaces, allocate cfg->map.grid for the renderer.
+** Map grid: contiguous non-blank map lines, reject inner blanks, optional
+** blanks only after the block, then reject any further non-blank line.
 */
+static int	map_line_push_metrics(const char *line, int *w, int *h)
+{
+	size_t	len;
+
+	if (!is_map_line(line))
+		return (error_msg("invalid map line"));
+	len = line_len_no_nl(line);
+	if ((int)len > *w)
+		*w = (int)len;
+	(*h)++;
+	return (EXIT_SUCCESS);
+}
+
+static int	scan_map_block(char **lines, int start, t_config *cfg, int *next)
+{
+	int	i;
+	int	w;
+	int	h;
+
+	if (!lines[start] || is_blank_line(lines[start]))
+		return (error_msg("missing map block"));
+	h = 0;
+	w = 0;
+	i = start;
+	while (lines[i] && !is_blank_line(lines[i]))
+	{
+		if (map_line_push_metrics(lines[i], &w, &h) == EXIT_FAILURE)
+			return (EXIT_FAILURE);
+		i++;
+	}
+	if (w <= 0 || h <= 0)
+		return (error_msg("invalid map size"));
+	cfg->map.height = h;
+	cfg->map.width = w;
+	*next = i;
+	return (EXIT_SUCCESS);
+}
+
 static int	fill_row_from_line(t_config *cfg, char **lines, int start, int i)
 {
 	size_t	len;
@@ -41,10 +79,6 @@ static int	build_map_grid(t_config *cfg, char **lines, int start)
 {
 	int		i;
 
-	i = 0;
-	while (lines[start + i])
-		i++;
-	cfg->map.height = i;
 	cfg->map.grid = ft_calloc((size_t)cfg->map.height + 1, sizeof(char *));
 	if (!cfg->map.grid)
 		return (error_msg("malloc failed"));
@@ -58,37 +92,17 @@ static int	build_map_grid(t_config *cfg, char **lines, int start)
 	return (EXIT_SUCCESS);
 }
 
-static int	measure_map_width(char **lines, int start)
-{
-	int		i;
-	size_t	len;
-	int		width;
-
-	i = start;
-	width = 0;
-	while (lines[i])
-	{
-		if (is_blank_line(lines[i]))
-			return (-1);
-		if (!is_map_line(lines[i]))
-			return (-1);
-		len = line_len_no_nl(lines[i]);
-		if ((int)len > width)
-			width = (int)len;
-		i++;
-	}
-	return (width);
-}
-
 int	parse_map_into_cfg(t_config *cfg, char **lines, int start)
 {
-	int	width;
+	int	next;
 
-	if (!lines[start])
-		return (error_msg("missing map block"));
-	width = measure_map_width(lines, start);
-	if (width <= 0)
-		return (error_msg("invalid map width"));
-	cfg->map.width = width;
-	return (build_map_grid(cfg, lines, start));
+	if (scan_map_block(lines, start, cfg, &next) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (build_map_grid(cfg, lines, start) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	while (lines[next] && is_blank_line(lines[next]))
+		next++;
+	if (lines[next])
+		return (error_msg("trailing content after map"));
+	return (EXIT_SUCCESS);
 }

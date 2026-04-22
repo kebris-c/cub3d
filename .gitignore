@@ -21,6 +21,7 @@
 
 # --- Local / non-submission trees (deps, notes, IDE) ---
 /docs/
+/tools/
 /.vscode/
 /.idea/
 *.swp
