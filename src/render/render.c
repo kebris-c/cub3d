@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 14:10:42 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:10:28 by kmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
  * and `perp_dist_wall` for each vector `x` from the player. This renderize
  * the wall at the correct perspective from the player, based
  * in the inverse of `perp_dist_wall`, calculating the leg of a triangule.
- * @param ray `t_ray` struct containing the information of vector `x`
- * @param x integer that represent to identify a vector in the array
- * of vectors.
+ * 
+ * @param ray `t_ray` struct containing the information of vector `x`.
+ * 
+ * @param z_buffer array with `n` vectors lenght, that stores every ray
+ * perpendicular distance ()
  */
 static void	calculate_line_height(t_ray *ray, double *z_buffer)
 {

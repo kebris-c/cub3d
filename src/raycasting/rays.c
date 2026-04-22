@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rays.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 14:29:25 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/22 16:05:11 by kmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,15 @@
  * in `(x, y)` before the colision with other `(x, y)` square in the
  * the `map->grid`, with the Theorem of Pythagoras.
  * 
- * @param game Pointer to the game structure `t_game`, that contains
- * 				the array of rays `t_rays`.
- * @param x	Integer that determine the vector `x` from the player position.
+ * @param ray Pointer to the structure `t_ray`, that contains
+ * 				the array of rays.
  * 
  * @note The division between an integer and 0 is protected. The result will be
  * 		`1e30` in C (infinite). This case ocurrs when the player is facing in
  * 		a direction where the vector never hits an `x` or `y` side of a square in
  * 		the grid.
+ * @note The struct `t_ray` must be used in the parameter with the form
+ * `&game->ray[x]`
  */
 static void	calculate_delta_dist(t_ray *ray)
 {
@@ -46,9 +47,8 @@ static void	calculate_delta_dist(t_ray *ray)
  * This determines if the direction of a vector `x` is left (minor than 0)
  * or right (greater than 0). This includes both `(x, y)`.
  * 
- * @param game Pointer to the game structure `t_game`, that contains
- * 				the array of rays `t_rays`.
- * @param x	Integer that determine the vector `x` from the player position.
+ * @param ray Pointer to the structure `t_ray`, that contains
+ * 				the array of rays.
  * 
  * @note This function must be used at the beginning of the calculations.
  * The vectors are proportionalized. So the `distance`
@@ -86,15 +86,19 @@ static void	proyect_vector(t_ray *ray)
 /**
  * @brief Function that begins the raycasting.
  * 
- * This determines the perspective betweem the player and the walls. This does
- * not include objects, doors, enemies or any other objects in the game.
+ * This determines the perspective between the player and the walls. This does
+ * not include objects, doors, enemies or any other object in the game.
  * 
  * @param ray Pointer to the structure `t_ray`, that contains
  * 				the array of rays.
- * @param map Pointer to the information of the map.d
+ * 
+ * @param map Pointer to the information of the map grid.
+ * 
  * @param cam_factor  Wide size of the FOV of the player.
+ * 
  * @param i	Integer that represents a iterator. This controls the loop
  * and prevents infinte proyection.
+ * 
  * @note `i` must be 0 at the start of each loop.
  */
 static t_hit_state	look_for_walls(t_ray *ray, t_map *map, int i)
@@ -134,10 +138,13 @@ static t_hit_state	look_for_walls(t_ray *ray, t_map *map, int i)
  * and `dir_y` of a `x` ray. It also gives each ray, the position
  * of the player in the `grid` (map).
  * 
- * @param game	Pointer to the game structure `t_game`.
+ * @param player Pointer to the player information `t_player`.
+ * 
  * @param ray Pointer to the structure `t_ray`, that contains
  * 				the array of rays.
+ * 
  * @param cam_factor  Wide size of the FOV of the player.
+ * 
  * @note the cam_factor cannot be 0, or a allocated space in memory!!
  */
 void	cast_rays(t_player *player, t_ray *ray, double cam_factor)

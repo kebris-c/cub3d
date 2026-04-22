@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/21 14:15:07 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/22 15:53:51 by kmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 # include <math.h>
 # include <unistd.h>
 
-# define WIN_WIDTH 720
-# define WIN_HEIGHT 460
-# define MOVE_SPEED 0.015
-# define ROT_SPEED 0.015
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+# define MOVE_SPEED 0.025
+# define ROT_SPEED 0.025
 # define MAX_STEPS 500
 # define SKY_COLOR 0x87CEEB
 # define FLOOR_COLOR 0x654321
