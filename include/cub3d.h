@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/22 15:53:51 by kmarrero         ###   ########.fr       */
+/*   Updated: 2026/04/24 14:43:52 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,18 @@
 
 # define WIN_WIDTH 1920
 # define WIN_HEIGHT 1080
-# define MOVE_SPEED 0.025
-# define ROT_SPEED 0.025
+# define MOVE_SPEED 0.035
+# define ROT_SPEED 0.035
 # define MAX_STEPS 500
 # define SKY_COLOR 0x87CEEB
 # define FLOOR_COLOR 0x654321
 
 typedef enum e_tex_id
 {
-	TEX_NO,
-	TEX_SO,
-	TEX_WE,
-	TEX_EA,
-	TEX_COUNT
+	NO,
+	SO,
+	WE,
+	EA
 }	t_tex_id;
 
 typedef enum e_hit_state
@@ -83,52 +82,58 @@ typedef struct s_image
 typedef struct s_ray
 {
 	/** Leg of the triangule that determines the FOV distance with a wall. */
-	double	perp_dist_wall;
+	double		perp_dist_wall;
 
 	/** Magnitude the current vector can advance in `x`. */
-	double	delta_dist_x;
+	double		delta_dist_x;
 
 	/** Magnitude the current vector can advance in `y`. */
-	double	delta_dist_y;
+	double		delta_dist_y;
 
 	/** Distance between vector and player in `x`. */
-	double	side_dist_x;
+	double		side_dist_x;
 
 	/** Distance between vector and player in `y`. */
-	double	side_dist_y;
+	double		side_dist_y;
 
 	/** Location of player in `x`. */
-	double	player_x;
+	double		player_x;
 
 	/** Location of player in `y`. */
-	double	player_y;
+	double		player_y;
 
 	/** Direction of the vector in `x`. */
-	double	dir_x;
+	double		dir_x;
 
 	/** Direction of the vector in `y`. */
-	double	dir_y;
+	double		dir_y;
+
+	/** Represent the exact part of the wall hit
+	 * by vector `x`. */
+	double		text_x;
 
 	/** Next step in `x`. */
-	int		step_x;
+	int			step_x;
 
 	/** Next step in `y`. */
-	int		step_y;
+	int			step_y;
 
 	/** Max lenght in `x`. */
-	int		map_x;
+	int			map_x;
 
 	/** Max lenght in `y`. */
-	int		map_y;
+	int			map_y;
 
 	/** Direction the vector hits the wall in `x` or `y` */
-	int		side;
+	int			side;
 
-	int		line_height;
+	t_tex_id	dir_id;
 
-	int		draw_start;
+	int			line_height;
+
+	int			draw_start;
 	
-	int		draw_end;
+	int			draw_end;
 }	t_ray;
 
 typedef struct s_render
@@ -240,6 +245,7 @@ int		dda_loop(t_ray *ray, t_map *map);
 void	render_frame(t_ray *ray, t_image *img, t_game *game);
 void	move_player(t_game *game);
 void	renderize_roof_floor(t_game *game);
+void	get_direction(t_ray *ray);
 
 int		parse_cub_file(t_config *cfg, const char *path);
 int		parse_map_into_cfg(t_config *cfg, char **lines, int start);

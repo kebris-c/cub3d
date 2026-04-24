@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   rays.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/22 16:05:11 by kmarrero         ###   ########.fr       */
+/*   Updated: 2026/04/24 11:41:03 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,6 @@ static void	proyect_vector(t_ray *ray)
  * 				the array of rays.
  * 
  * @param map Pointer to the information of the map grid.
- * 
- * @param cam_factor  Wide size of the FOV of the player.
  * 
  * @param i	Integer that represents a iterator. This controls the loop
  * and prevents infinte proyection.

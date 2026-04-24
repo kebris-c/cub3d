@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   father.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/22 16:10:28 by kmarrero         ###   ########.fr       */
+/*   Created: 2026/04/24 10:29:17 by kjroydev          #+#    #+#             */
+/*   Updated: 2026/04/24 11:32:47 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,52 +40,6 @@ static void	calculate_line_height(t_ray *ray, double *z_buffer)
 		ray->draw_end = h - 1;
 }
 
-void	renderize_roof_floor(t_game *game)
-{
-	int	win_middle;
-	int	x;
-	int	y;
-
-	y = 0;
-	win_middle = WIN_HEIGHT / 2;
-	while (y < WIN_HEIGHT)
-	{
-		x = 0;
-		while (x < WIN_WIDTH)
-		{
-			if (y < win_middle)
-				put_pixel(&game->frame, x, y, SKY_COLOR);
-			else
-				put_pixel(&game->frame, x, y, FLOOR_COLOR);
-			x++;
-		}
-		y++;
-	}
-	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
-}
-
-void	render_frame(t_ray *ray, t_image *img, t_game *game)
-{
-	int	x;
-	int	y;
-
-	x = 0;
-	while (x < WIN_WIDTH)
-	{
-		y = ray[x].draw_start;
-		while (y < ray[x].draw_end)
-		{
-			if (ray[x].side == 0)
-				put_pixel(img, x, y, 0x00FF00);
-			else
-				put_pixel(img, x, y, 0xFF0000);
-			y++;
-		}
-		x++;
-	}
-	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
-}
-
 void	map_raycasting(t_game *game, t_map *map)
 {
 	double		cam_factor[WIN_WIDTH];
@@ -100,6 +54,7 @@ void	map_raycasting(t_game *game, t_map *map)
 		cast_rays(&game->player, ray, cam_factor[x]);
 		dda_loop(ray, map);
 		calculate_line_height(ray, &game->render.z_buffer[x]);
+		get_direction(ray);
 		x++;
 	}
 }

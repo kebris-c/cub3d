@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 00:00:00 by kebris-c          #+#    #+#             */
-/*   Updated: 2026/04/20 20:24:16 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/24 11:13:31 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,6 @@ int	is_walkable(t_map *map, double x, double y)
 		|| cell_y < 0 || cell_y >= map->height)
 		return (0);
 	return (map->grid[cell_y][cell_x] == '0');
-}
-
-void	precal_camera_factors(double *cam_factor)
-{
-	int	x;
-
-	x = 0;
-	while (x < WIN_WIDTH)
-	{
-		cam_factor[x] = 2.0 * x / (double)(WIN_WIDTH - 1) - 1.0;
-		x++;
-	}
 }
 
 void	put_pixel(t_image *img, int x, int y, int color)
