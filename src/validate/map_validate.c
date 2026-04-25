@@ -14,7 +14,8 @@
 
 /*
 ** Map rules: charset, single spawn, outer ring is '1'. Interior flood-fill
-** for full closure is left to the student (TODO).
+** closure check: spaces are void/outside; any walkable cell that can reach
+** void or out-of-bounds makes the map invalid.
 */
 int	is_map_line(const char *line)
 {
@@ -30,6 +31,11 @@ int	is_map_line(const char *line)
 		i++;
 	}
 	return (1);
+}
+
+static int	map_all_walkables_enclosed(t_config *cfg)
+{
+	return (map_is_closed(cfg));
 }
 
 static int	register_spawn(t_config *cfg, int x, int y, int *found)
@@ -73,35 +79,11 @@ static int	find_single_spawn(t_config *cfg)
 	return (EXIT_SUCCESS);
 }
 
-static int	map_border_is_walled(t_config *cfg)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	while (y < cfg->map.height)
-	{
-		x = 0;
-		while (x < cfg->map.width)
-		{
-			if (y == 0 || y == cfg->map.height - 1
-				|| x == 0 || x == cfg->map.width - 1)
-			{
-				if (cfg->map.grid[y][x] != '1')
-					return (error_msg("map border must be walls"));
-			}
-			x++;
-		}
-		y++;
-	}
-	return (EXIT_SUCCESS);
-}
-
 int	validate_map(t_config *cfg)
 {
 	if (cfg->map.height <= 0 || cfg->map.width <= 0 || !cfg->map.grid)
 		return (error_msg("empty map"));
 	if (find_single_spawn(cfg) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	return (map_border_is_walled(cfg));
+	return (map_all_walkables_enclosed(cfg));
 }

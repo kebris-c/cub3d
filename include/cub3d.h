@@ -180,6 +180,14 @@ typedef struct s_config
 	char	player_dir;
 }	t_config;
 
+typedef struct s_ff_state
+{
+	t_config		*cfg;
+	unsigned char	*seen;
+	int				*q;
+	int				ht[2];
+}	t_ff_state;
+
 typedef struct s_player
 {
 	double	x;
@@ -271,6 +279,8 @@ void	renderize_roof_floor(t_game *game);
 
 int		close_window(t_game *game);
 int		cub_signal_stop_requested(void);
+int		cub_ensure_no_extra_tokens(const char *s, size_t i);
+int		cub_parse_rgb_triplet(const char *value, int *out_color);
 int		dda_loop(t_ray *ray, t_map *map);
 int		error_msg(const char *msg);
 int		file_has_extension(const char *file, const char *ext);
@@ -288,6 +298,7 @@ int		parse_cub_file(t_config *cfg, const char *path);
 int		parse_header_line(t_config *cfg, const char *line);
 int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
 int		rgb_to_int(int r, int g, int b);
+int		map_is_closed(t_config *cfg);
 int		validate_map(t_config *cfg);
 
 /* -------------------------------------------------------------------------- */
@@ -295,6 +306,7 @@ int		validate_map(t_config *cfg);
 /* -------------------------------------------------------------------------- */
 
 char	*trim_spaces(const char *line);
+char	*cub_next_token(const char *s, size_t *i);
 
 /* -------------------------------------------------------------------------- */
 /*   Function prototypes — size_t                                             */

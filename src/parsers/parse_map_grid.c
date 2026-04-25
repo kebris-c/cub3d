@@ -69,7 +69,7 @@ static int	fill_row_from_line(t_config *cfg, char **lines, int start, int i)
 		if ((size_t)j < len)
 			cfg->map.grid[i][j] = lines[start + i][j];
 		else
-			cfg->map.grid[i][j] = '0';
+			cfg->map.grid[i][j] = ' ';
 		j++;
 	}
 	return (EXIT_SUCCESS);
@@ -95,14 +95,20 @@ static int	build_map_grid(t_config *cfg, char **lines, int start)
 int	parse_map_into_cfg(t_config *cfg, char **lines, int start)
 {
 	int	next;
+	int	after_blanks;
 
 	if (scan_map_block(lines, start, cfg, &next) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (build_map_grid(cfg, lines, start) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	while (lines[next] && is_blank_line(lines[next]))
-		next++;
-	if (lines[next])
+	after_blanks = next;
+	while (lines[after_blanks] && is_blank_line(lines[after_blanks]))
+		after_blanks++;
+	if (lines[after_blanks])
+	{
+		if (is_map_line(lines[after_blanks]))
+			return (error_msg("blank line inside map"));
 		return (error_msg("trailing content after map"));
+	}
 	return (EXIT_SUCCESS);
 }

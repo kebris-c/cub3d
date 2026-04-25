@@ -19,6 +19,8 @@ static int	assign_texture_path(t_config *cfg, int id, const char *value)
 {
 	if (cfg->tex_path[id])
 		return (error_msg("duplicated texture identifier"));
+	if (ft_strchr(value, ' ') || ft_strchr(value, '\t'))
+		return (error_msg("texture path must be a single token"));
 	if (!file_has_extension(value, ".xpm"))
 		return (error_msg("texture path must end with .xpm"));
 	if (access(value, R_OK) != 0)
@@ -27,33 +29,6 @@ static int	assign_texture_path(t_config *cfg, int id, const char *value)
 	if (!cfg->tex_path[id])
 		return (error_msg("malloc failed"));
 	return (EXIT_SUCCESS);
-}
-
-static int	parse_rgb_triplet(const char *value, int *out_color)
-{
-	char	**parts;
-	int		rgb[3];
-	int		i;
-	size_t	j;
-
-	parts = ft_split(value, ',');
-	if (!parts || !parts[0] || !parts[1] || !parts[2] || parts[3])
-		return (ft_free_matrix(parts), error_msg("invalid RGB format"));
-	i = 0;
-	while (i < 3)
-	{
-		j = 0;
-		while (parts[i][j] && ft_isdigit((unsigned char)parts[i][j]))
-			j++;
-		if (j == 0 || parts[i][j])
-			return (ft_free_matrix(parts), error_msg("invalid RGB format"));
-		rgb[i] = ft_atoi(parts[i]);
-		if (rgb[i] < 0 || rgb[i] > 255)
-			return (ft_free_matrix(parts), error_msg("RGB value out of range"));
-		i++;
-	}
-	*out_color = rgb_to_int(rgb[0], rgb[1], rgb[2]);
-	return (ft_free_matrix(parts), EXIT_SUCCESS);
 }
 
 static int	parse_identifier_line(t_config *cfg, const char *id,
@@ -71,39 +46,36 @@ static int	parse_identifier_line(t_config *cfg, const char *id,
 	{
 		if (cfg->floor_color != -1)
 			return (error_msg("duplicated F color"));
-		return (parse_rgb_triplet(value, &cfg->floor_color));
+		return (cub_parse_rgb_triplet(value, &cfg->floor_color));
 	}
 	if (ft_strncmp(id, "C", 2) == 0)
 	{
 		if (cfg->ceil_color != -1)
 			return (error_msg("duplicated C color"));
-		return (parse_rgb_triplet(value, &cfg->ceil_color));
+		return (cub_parse_rgb_triplet(value, &cfg->ceil_color));
 	}
 	return (error_msg("unknown identifier in header"));
 }
 
 int	parse_header_line(t_config *cfg, const char *line)
 {
-	char	*trimmed;
-	char	*space;
+	size_t	i;
 	char	*id;
 	char	*value;
 	int		ret;
 
-	trimmed = trim_spaces(line);
-	if (!trimmed || !*trimmed)
-		return (free(trimmed), EXIT_SUCCESS);
-	space = ft_strchr(trimmed, ' ');
-	if (!space)
-		return (free(trimmed), error_msg("header line missing value"));
-	*space = '\0';
-	id = trimmed;
-	value = trim_spaces(space + 1);
-	if (!value || !*value)
-		return (free(value), free(trimmed), error_msg("header value missing"));
-	ret = parse_identifier_line(cfg, id, value);
+	i = 0;
+	id = cub_next_token(line, &i);
+	if (!id)
+		return (EXIT_SUCCESS);
+	value = cub_next_token(line, &i);
+	if (!value)
+		return (free(id), error_msg("header value missing"));
+	ret = cub_ensure_no_extra_tokens(line, i);
+	if (ret == EXIT_SUCCESS)
+		ret = parse_identifier_line(cfg, id, value);
 	free(value);
-	free(trimmed);
+	free(id);
 	return (ret);
 }
 

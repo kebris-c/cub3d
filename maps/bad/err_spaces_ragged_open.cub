@@ -2,16 +2,14 @@ NO textures/wall.xpm
 SO textures/wall.xpm
 WE textures/wall.xpm
 EA textures/wall.xpm
-F 5,5,5
-C 10,10,50
+F 220,100,0
+C 225,30,0
 
-111
-101
-101
-101
-101
-10S01
-101
-101
-101
-111
+1111111
+1000001
+1011101
+101N101
+1010001
+1111011
+  11001
+   11
