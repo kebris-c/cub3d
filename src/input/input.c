@@ -61,6 +61,7 @@ int	game_loop(void *param)
 	renderize_roof_floor(game);
 	move_player(game);
 	map_raycasting(game, &game->cfg.map);
-	render_frame(game->ray, &game->frame, game);
+	render_frame(game->ray, &game->frame);
+	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 	return (0);
 }
