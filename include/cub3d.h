@@ -33,8 +33,6 @@
 # define MOVE_SPEED 0.015
 # define ROT_SPEED 0.015
 # define MAX_STEPS 500
-# define SKY_COLOR 0x87CEEB
-# define FLOOR_COLOR 0x654321
 
 /* -------------------------------------------------------------------------- */
 /*   Enumeration types                                                        */
@@ -270,7 +268,7 @@ void	map_raycasting(t_game *game, t_map *map);
 void	move_player(t_game *game);
 void	precal_camera_factors(double *cam_factor);
 void	put_pixel(t_image *img, int x, int y, int color);
-void	render_frame(t_ray *ray, t_image *img, t_game *game);
+void	render_frame(t_ray *ray, t_image *img);
 void	renderize_roof_floor(t_game *game);
 
 /* -------------------------------------------------------------------------- */

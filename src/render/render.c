@@ -52,17 +52,16 @@ void	renderize_roof_floor(t_game *game)
 		while (x < WIN_WIDTH)
 		{
 			if (y < win_middle)
-				put_pixel(&game->frame, x, y, SKY_COLOR);
+				put_pixel(&game->frame, x, y, game->cfg.ceil_color);
 			else
-				put_pixel(&game->frame, x, y, FLOOR_COLOR);
+				put_pixel(&game->frame, x, y, game->cfg.floor_color);
 			x++;
 		}
 		y++;
 	}
-	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 }
 
-void	render_frame(t_ray *ray, t_image *img, t_game *game)
+void	render_frame(t_ray *ray, t_image *img)
 {
 	int	x;
 	int	y;
@@ -81,7 +80,6 @@ void	render_frame(t_ray *ray, t_image *img, t_game *game)
 		}
 		x++;
 	}
-	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 }
 
 void	map_raycasting(t_game *game, t_map *map)
