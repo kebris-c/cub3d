@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/09 20:18:47 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 15:31:38 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 15:58:33 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ static void	proyect_vector(t_ray *ray)
 	if (ray->dir_x < 0)
 	{
 		ray->step_x = -1;
-		ray->side_dist_x = (ray->player_x - ray->map_x)
-			* ray->delta_dist_x;
+		ray->side_dist_x = (ray->player_x
+				- ray->map_x) * ray->delta_dist_x;
 	}
 	else
 	{
