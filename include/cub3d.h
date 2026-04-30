@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 15:36:41 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 15:47:15 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,10 @@ typedef struct s_ray
 	/** Height of objects to prevent fish eye (triangule leg). */
 	double		line_height;
 
+	/** First pixel at the upside of the wall slice. */
 	int			draw_start;
 
+	/** Last pixel at the downside of the wall slice. */
 	int			draw_end;
 
 	/** Next step in `x`. */
