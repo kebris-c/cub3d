@@ -1,5 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
+/*   Updated: 2026/04/30 15:47:15 by kjroydev         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
+
+/* -------------------------------------------------------------------------- */
+/*   System and project includes                                              */
+/* -------------------------------------------------------------------------- */
 
 # include "libft.h"
 # include "mlx.h"
@@ -8,19 +24,35 @@
 # include <math.h>
 # include <unistd.h>
 
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
-# define MOVE_SPEED 0.08
-# define ROT_SPEED 0.05
+# define WIN_WIDTH 1920
+# define WIN_HEIGHT 1080
+# define MOVE_SPEED 0.035
+# define ROT_SPEED 0.035
+# define MAX_STEPS 500
+
+/* -------------------------------------------------------------------------- */
+/*   Enumeration types                                                        */
+/* -------------------------------------------------------------------------- */
 
 typedef enum e_tex_id
 {
-	TEX_NO = 0,
-	TEX_SO = 1,
-	TEX_WE = 2,
-	TEX_EA = 3,
-	TEX_COUNT = 4
+	NO,
+	SO,
+	WE,
+	EA,
+	TEX_COUNT
 }	t_tex_id;
+
+typedef enum e_hit_state
+{
+	HIT_NONE,
+	HIT_WALL,
+	HIT_OOB
+}	t_hit_state;
+
+/* -------------------------------------------------------------------------- */
+/*   Structure types                                                          */
+/* -------------------------------------------------------------------------- */
 
 typedef struct s_image
 {
@@ -32,6 +64,93 @@ typedef struct s_image
 	int		line_len;
 	int		endian;
 }	t_image;
+
+/**
+ * @struct s_ray
+ * @brief Structure that contains the information of an `x` ray.
+ * 
+ * This structure contains the representation of a 2D vector `(x, y)`, with the
+ * adition of it's next step. The direction is determinated by the starting
+ * position `(x, y)` of the player in the grid. `direction-x` and `direction-y` 
+ * of the current vector, it's determinated by the `direction-x` and
+ * `direction-y` the player is facing at  the beginning 
+ * of the game/level `(N, S, E, W)`.
+ * 
+ * Composition:
+ * 
+ * - Delta distance the vector can advance from a `(x, y)` starting point
+ * 		without hiting a wall.
+ * 
+ * - Side distance the vector has between the player and
+ * 			a wall/interactive object.
+ * 
+ * - Direction `(x, y)` the vector is facing.
+ * 
+ * - The next step in `(x, y)` it has to advance.
+ * 
+ * - Starting position in `(x, y)`.
+ */
+typedef struct s_ray
+{
+	/** ID of `NO`, `SO`, `WE`, `EA` */
+	t_tex_id	dir_id;
+
+	/** Leg of the triangule that determines the FOV distance with a wall. */
+	double		perp_dist_wall;
+
+	/** Magnitude the current vector can advance in `x`. */
+	double		delta_dist_x;
+
+	/** Magnitude the current vector can advance in `y`. */
+	double		delta_dist_y;
+
+	/** Distance between vector and player in `x`. */
+	double		side_dist_x;
+
+	/** Distance between vector and player in `y`. */
+	double		side_dist_y;
+
+	/** Location of player in `x`. */
+	double		player_x;
+
+	/** Location of player in `y`. */
+	double		player_y;
+
+	/** Direction of the vector in `x`. */
+	double		dir_x;
+
+	/** Direction of the vector in `y`. */
+	double		dir_y;
+
+	/** Height of objects to prevent fish eye (triangule leg). */
+	double		line_height;
+
+	/** First pixel at the upside of the wall slice. */
+	int			draw_start;
+
+	/** Last pixel at the downside of the wall slice. */
+	int			draw_end;
+
+	/** Next step in `x`. */
+	int			step_x;
+
+	/** Next step in `y`. */
+	int			step_y;
+
+	/** Max lenght in `x`. */
+	int			map_x;
+
+	/** Max lenght in `y`. */
+	int			map_y;
+
+	/** Direction the vector hits the wall in `x` or `y` */
+	int			side;
+}	t_ray;
+
+typedef struct s_render
+{
+	double	z_buffer[WIN_WIDTH];
+}	t_render;
 
 typedef struct s_keys
 {
@@ -61,6 +180,14 @@ typedef struct s_config
 	char	player_dir;
 }	t_config;
 
+typedef struct s_ff_state
+{
+	t_config		*cfg;
+	unsigned char	*seen;
+	int				*q;
+	int				ht[2];
+}	t_ff_state;
+
 typedef struct s_player
 {
 	double	x;
@@ -71,41 +198,151 @@ typedef struct s_player
 	double	plane_y;
 }	t_player;
 
+/**
+ * @struct s_cal
+ * @brief Temporary structure used during wall rendering to map screen pixels
+ *        to texture coordinates.
+ *
+ * Components:
+ * 
+ * - step: Vertical increment in texture per screen pixel
+ * 		`(texture_height / line_height)`
+ *
+ * - text_x: Horizontal coordinate in the texture corresponding to wall hit.
+ *
+ * - text_y: Vertical coordinate in the texture used while iterating pixels.
+ */
+typedef struct s_cal
+{
+	/** Vertical increment in texture per screen pixel
+	 * `(texture_height / line_height)` */
+	double	step;
+
+	/** Vertical coordinate in the texture used while iterating pixels. */
+	double	text_y;
+
+	/** Horizontal coordinate in the texture corresponding to wall hit. */
+	double	text_x;
+}	t_cal;
+
+/**
+ * @struct s_game
+ * @brief Structure that contains all the information of the game.
+ * 
+ * This structure stores relevant information of the game core,
+ * including references to other structures like the
+ * initial configuration information; the keyboard input;
+ * rays of the 2D engine (raycasting) of the game and the player.
+ * 
+ * Composition:
+ * 
+ * - mlx: Pointer to the MiniLibX context (graphics library instance).
+ * 
+ * - win: Pointer to the window created by MiniLibX.
+ * 
+ * - frame: Image buffer used as the current render target.
+ * 
+ * - textures: Array of textures used for wall rendering.
+ * 
+ * - cfg: Parsed configuration data (map, colors, textures paths, etc.).
+ * 
+ * - player: Player state (position, direction, camera plane).
+ * 
+ * - ray: Array of rays casted per screen column (raycasting engine).
+ * 
+ * - keys: Structure storing the current keyboard input state.
+ */
 typedef struct s_game
 {
+	/** Pointer to the MiniLibX */
 	void		*mlx;
+
+	/** Pointer to the windows created by MiniLibX. */
 	void		*win;
+
+	/** Image buffer. */
 	t_image		frame;
+
+	/** Array of textures for wall rendering */
 	t_image		textures[TEX_COUNT];
+
+	/** Parsed configuration. */
 	t_config	cfg;
+
+	/** Player state. */
 	t_player	player;
+
+	/** Array of rays casted per screen column (raycasting engine). */
+	t_ray		ray[WIN_WIDTH];
+
+	/** Keyboard keys functions. */
 	t_keys		keys;
+
+	/** Z-buffer. */
+	t_render	render;
+
 }	t_game;
 
-int		parse_cub_file(t_config *cfg, const char *path);
-int		parse_header_line(t_config *cfg, const char *line);
-int		headers_complete(t_config *cfg);
-int		validate_map(t_config *cfg);
-int		init_game(t_game *game);
-int		game_loop(t_game *game);
-int		key_press(int keycode, t_game *game);
-int		key_release(int keycode, t_game *game);
-int		close_window(t_game *game);
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — void                                               */
+/* -------------------------------------------------------------------------- */
+
+void	cast_rays(t_player *player, t_ray *ray, double cam_factor);
 void	cleanup_game(t_game *game);
-void	render_frame(t_game *game);
-void	move_player(t_game *game);
-int		error_msg(const char *msg);
-int		rgb_to_int(int r, int g, int b);
-int		file_has_extension(const char *file, const char *ext);
-int		load_file_lines(const char *path, char ***lines);
+void	cub_signals_install(void);
+void	cub_signals_restore(void);
+void	free_config(t_config *cfg);
 void	free_lines(char **lines);
+void	init_player(t_game *game);
+void	map_raycasting(t_game *game, t_map *map);
+void	move_player(t_game *game);
+void	precal_camera_factors(double *cam_factor);
+void	put_pixel(t_image *img, int x, int y, int color);
+void	render_frame(t_ray *ray, t_game *game);
+void	renderize_roof_floor(t_game *game);
+void	get_direction(t_ray *ray);
+void	calculate_line_height(t_ray *ray, double *z_buffer);
+void	render_loop_calculations(t_ray *ray, t_game *game, t_cal *cal);
+
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — int                                                */
+/* -------------------------------------------------------------------------- */
+
+int		close_window(t_game *game);
+int		cub_signal_stop_requested(void);
+int		cub_ensure_no_extra_tokens(const char *s, size_t i);
+int		cub_parse_rgb_triplet(const char *value, int *out_color);
+int		dda_loop(t_ray *ray, t_map *map);
+int		error_msg(const char *msg);
+int		file_has_extension(const char *file, const char *ext);
+int		game_loop(void *param);
+int		get_texel(t_image *img, int x, int y);
+int		headers_complete(t_config *cfg);
+int		init_game(t_game *game);
 int		is_blank_line(const char *line);
 int		is_map_line(const char *line);
-size_t	line_len_no_nl(const char *line);
-char	*trim_spaces(const char *line);
-void	put_pixel(t_image *img, int x, int y, int color);
-int		get_texel(t_image *img, int x, int y);
 int		is_walkable(t_map *map, double x, double y);
-void	free_config(t_config *cfg);
+int		key_press(int keycode, t_game *game);
+int		key_release(int keycode, t_game *game);
+int		load_file_lines(const char *path, char ***lines);
+int		parse_cub_file(t_config *cfg, const char *path);
+int		parse_header_line(t_config *cfg, const char *line);
+int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
+int		rgb_to_int(int r, int g, int b);
+int		map_is_closed(t_config *cfg);
+int		validate_map(t_config *cfg);
+
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — char *                                             */
+/* -------------------------------------------------------------------------- */
+
+char	*trim_spaces(const char *line);
+char	*cub_next_token(const char *s, size_t *i);
+
+/* -------------------------------------------------------------------------- */
+/*   Function prototypes — size_t                                             */
+/* -------------------------------------------------------------------------- */
+
+size_t	line_len_no_nl(const char *line);
 
 #endif

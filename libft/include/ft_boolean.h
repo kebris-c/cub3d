@@ -1,9 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_boolean.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
+/*   Updated: 2026/04/20 00:00:00 by kebris-c       ###   ########.fr         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_BOOLEAN_H
 # define FT_BOOLEAN_H
 
 # define TRUE 1
 # define FALSE 0
-# define EVEN(nbr) ((nbr) % 2 == 0)
-# define ODD(nbr) ((nbr) % 2 != 0)
 
 #endif

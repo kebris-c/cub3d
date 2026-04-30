@@ -16,7 +16,7 @@ make
 ### Run
 
 ```bash
-./cub3D maps/valid.cub
+./cub3D maps/good/play_subject_reference.cub
 ```
 
 ### Expected map extension
@@ -28,7 +28,9 @@ The project expects map files using the **`.cub`** extension.
 For mandatory cub3D:
 - Header identifiers: `NO`, `SO`, `WE`, `EA`
 - Texture files should be `.xpm`
-- In this skeleton, texture loading is left as a TODO module
+### Source layout
+
+Sources live under `src/<feature>/` and the shared header is `include/cub3d.h`.
 
 ### Suggested work split (2 people)
 
@@ -54,7 +56,7 @@ For mandatory cub3D:
 We used AI assistance only for:
 - project decomposition into phases/modules
 - checklist-style planning
-- skeleton bootstrap guidance
+- early bootstrap guidance
 
 Final implementation, debugging, validation and submission criteria remain under
 our responsibility.

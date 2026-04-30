@@ -1,0 +1,28 @@
+# --- cub3D build outputs ---
+/cub3D
+/objs/
+*.o
+*.d
+
+# --- miniLibX (generated in-tree) ---
+/minilibx-linux/obj/
+/minilibx-linux/libmlx.a
+/minilibx-linux/libmlx_Linux.a
+/minilibx-linux/*~
+/minilibx-linux/test/mlx-test
+/minilibx-linux/test/main.o
+
+# --- libft build outputs ---
+/libft/libft.a
+/libft/objs/
+/libft/deps/
+/libft/*.o
+/libft/*.d
+
+# --- Local / non-submission trees (deps, notes, IDE) ---
+/docs/
+/tools/
+/.vscode/
+/.idea/
+*.swp
+*~

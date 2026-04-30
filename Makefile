@@ -1,47 +1,71 @@
 NAME		= cub3D
 CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -MMD -MP
+CFLAGS		= -Wall -Wextra -Werror -MMD -MP -g
 
-INCLUDES	= -Iinclude -Ilibft/include -Iminilibx-linux
+INCLUDES	= -Iinclude -Iinclude -Ilibft/include -Iminilibx-linux
 LIBFT_DIR	= libft
 MLX_DIR		= minilibx-linux
+LIBFT_A		= $(LIBFT_DIR)/libft.a
+MLX_A		= $(MLX_DIR)/libmlx_Linux.a
 
 MLX_FLAGS	= -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm -lz
 LIBFT_FLAG	= -L$(LIBFT_DIR) -lft
 
-SRC_DIR		= src
 OBJ_DIR		= objs
 
-SRCS		=	main.c \
-				parse_utils.c \
-				file_loader.c \
-				parse_header.c \
-				parse_map.c \
-				map_validate.c \
-				render.c \
-				input.c \
-				movement.c \
-				image_utils.c \
-				game_cleanup.c \
-				utils.c
-OBJS		= $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
-DEPS		= $(OBJS:.o=.d)
+# Entry point: separate object + dependency file (not mixed into SRCS).
+MAIN_SRC	= src/core/main.c
+MAIN_OBJ	= $(OBJ_DIR)/src/core/main.o
+
+SRCS		=	src/common/utils.c					\
+				src/init/game.c						\
+				src/init/player.c					\
+				src/input/input.c					\
+				src/io/file_loader.c				\
+				src/lifecycle/game_cleanup.c		\
+				src/lifecycle/signals.c				\
+				src/movement/movement.c				\
+				src/parsers/parse_utils.c 			\
+				src/parsers/parse_header_tokenize.c	\
+				src/parsers/parse_header.c 			\
+				src/parsers/parse_map_grid.c		\
+				src/parsers/parse_map.c				\
+				src/raycasting/directions.c			\
+				src/raycasting/father.c				\
+				src/raycasting/ray_utils.c			\
+				src/raycasting/rays.c				\
+				src/render/renderize.c				\
+				src/render/textures.c				\
+				src/validate/map_validate.c			\
+				src/validate/map_floodfill.c		
+
+OBJS		= $(SRCS:%.c=$(OBJ_DIR)/%.o)
+DEPS		= $(OBJS:.o=.d) $(MAIN_OBJ:.o=.d)
 
 .PHONY: all clean fclean re
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
+$(NAME): $(MAIN_OBJ) $(OBJS) | $(LIBFT_A) $(MLX_A)
+	$(CC) $(MAIN_OBJ) $(OBJS) $(INCLUDES) $(LIBFT_FLAG) $(MLX_FLAGS) -o $(NAME)
+
+$(LIBFT_A):
 	@$(MAKE) -C $(LIBFT_DIR)
+
+$(MLX_A):
 	@chmod +x "$(MLX_DIR)/configure"
 	@$(MAKE) -C $(MLX_DIR)
-	$(CC) $(OBJS) $(INCLUDES) $(LIBFT_FLAG) $(MLX_FLAGS) -o $(NAME)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(MAIN_OBJ): $(MAIN_SRC)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $(MAIN_SRC) -o $(MAIN_OBJ)
+
+$(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
+	@chmod +x "$(MLX_DIR)/configure" 2>/dev/null || true
 	@$(MAKE) -C $(LIBFT_DIR) clean
 	@$(MAKE) -C $(MLX_DIR) clean
 	rm -rf $(OBJ_DIR)
