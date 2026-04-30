@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_header.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kebris-c <kebris-c@student.42madrid.com>  +#+  +:+       +#+         */
+/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 00:00:00 by kebris-c        #+#    #+#               */
-/*   Updated: 2026/04/22 00:00:00 by kebris-c       ###   ########.fr         */
+/*   Created: 2026/04/20 00:00:00 by kebris-c          #+#    #+#             */
+/*   Updated: 2026/04/30 13:09:53 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ static int	parse_identifier_line(t_config *cfg, const char *id,
 	const char *value)
 {
 	if (ft_strncmp(id, "NO", 3) == 0)
-		return (assign_texture_path(cfg, TEX_NO, value));
+		return (assign_texture_path(cfg, NO, value));
 	if (ft_strncmp(id, "SO", 3) == 0)
-		return (assign_texture_path(cfg, TEX_SO, value));
+		return (assign_texture_path(cfg, SO, value));
 	if (ft_strncmp(id, "WE", 3) == 0)
-		return (assign_texture_path(cfg, TEX_WE, value));
+		return (assign_texture_path(cfg, WE, value));
 	if (ft_strncmp(id, "EA", 3) == 0)
-		return (assign_texture_path(cfg, TEX_EA, value));
+		return (assign_texture_path(cfg, EA, value));
 	if (ft_strncmp(id, "F", 2) == 0)
 	{
 		if (cfg->floor_color != -1)

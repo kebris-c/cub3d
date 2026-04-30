@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 08:50:03 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 13:32:53 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ typedef enum e_tex_id
 	NO,
 	SO,
 	WE,
-	EA
+	EA,
+	TEX_COUNT
 }	t_tex_id;
 
 typedef enum e_hit_state
@@ -91,6 +92,9 @@ typedef struct s_image
  */
 typedef struct s_ray
 {
+	/** ID of `NO`, `SO`, `WE`, `EA` */
+	t_tex_id	dir_id;
+
 	/** Leg of the triangule that determines the FOV distance with a wall. */
 	double		perp_dist_wall;
 
@@ -118,9 +122,12 @@ typedef struct s_ray
 	/** Direction of the vector in `y`. */
 	double		dir_y;
 
-	/** Represent the exact part of the wall hit
-	 * by vector `x`. */
-	double		text_x;
+	/** Height of objects to prevent fish eye (triangule leg). */
+	int			line_height;
+
+	int			draw_start;
+
+	int			draw_end;
 
 	/** Next step in `x`. */
 	int			step_x;
@@ -136,14 +143,6 @@ typedef struct s_ray
 
 	/** Direction the vector hits the wall in `x` or `y` */
 	int			side;
-
-	t_tex_id	dir_id;
-
-	int			line_height;
-
-	int			draw_start;
-	
-	int			draw_end;
 }	t_ray;
 
 typedef struct s_render
@@ -198,6 +197,33 @@ typedef struct s_player
 }	t_player;
 
 /**
+ * @struct s_cal
+ * @brief Temporary structure used during wall rendering to map screen pixels
+ *        to texture coordinates.
+ *
+ * Components:
+ * 
+ * - step: Vertical increment in texture per screen pixel
+ * 		`(texture_height / line_height)`
+ *
+ * - text_x: Horizontal coordinate in the texture corresponding to wall hit.
+ *
+ * - text_y: Vertical coordinate in the texture used while iterating pixels.
+ */
+typedef struct s_cal
+{
+	/** Vertical increment in texture per screen pixel
+	 * `(texture_height / line_height)` */
+	int		step;
+
+	/** Vertical coordinate in the texture used while iterating pixels. */
+	int		text_y;
+
+	/** Horizontal coordinate in the texture corresponding to wall hit. */
+	double	text_x;
+}	t_cal;
+
+/**
  * @struct s_game
  * @brief Structure that contains all the information of the game.
  * 
@@ -250,6 +276,7 @@ typedef struct s_game
 	/** Keyboard keys functions. */
 	t_keys		keys;
 
+	/** Z-buffer. */
 	t_render	render;
 
 }	t_game;
@@ -269,10 +296,11 @@ void	map_raycasting(t_game *game, t_map *map);
 void	move_player(t_game *game);
 void	precal_camera_factors(double *cam_factor);
 void	put_pixel(t_image *img, int x, int y, int color);
-void	render_frame(t_ray *ray, t_image *img);
+void	render_frame(t_ray *ray, t_image *img, t_game *game);
 void	renderize_roof_floor(t_game *game);
 void	get_direction(t_ray *ray);
 void	calculate_line_height(t_ray *ray, double *z_buffer);
+void	render_loop_calculations(t_ray *ray, t_image *img, t_cal *cal);
 
 /* -------------------------------------------------------------------------- */
 /*   Function prototypes — int                                                */

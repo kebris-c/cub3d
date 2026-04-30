@@ -1,9 +1,9 @@
 C 100,100,120
 F 40,35,30
-NO textures/wall.xpm
-SO textures/wall.xpm
-WE textures/wall.xpm
-EA textures/wall.xpm
+NO textures/textura.xpm
+SO textures/textura.xpm
+WE textures/textura.xpm
+EA textures/textura.xpm
 
 1111111111111
 1000000000001
