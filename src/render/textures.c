@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 10:21:26 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 13:50:01 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 14:36:09 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,17 @@ static double	calculate_wall_hit(t_ray *ray, t_image *img)
 	return (text_x);
 }
 
-void	render_loop_calculations(t_ray *ray, t_image *img, t_cal *cal)
+void	render_loop_calculations(t_ray *ray, t_game *game, t_cal *cal)
 {
+	t_image	*tex;
+	double	offset;
+
+	tex = &game->textures[ray->dir_id];
 	cal->step = 0;
 	cal->text_x = 0;
 	cal->text_y = 0;
-	cal->step = img->height / ray->line_height;
-	cal->text_x = calculate_wall_hit(ray, img);
+	cal->step = (double)tex->height / (double)ray->line_height;
+	cal->text_x = calculate_wall_hit(ray, tex);
+	offset = (ray->draw_start - ((WIN_HEIGHT / 2) - (ray->line_height / 2)));
+	cal->text_y = offset * cal->step;
 }
-
-// static int	load_textures_skeleton(t_game *game)
-// {
-// 	(void)game;
-// 	return (EXIT_SUCCESS);
-// }

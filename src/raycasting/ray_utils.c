@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 11:13:16 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 08:50:39 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 15:38:34 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	calculate_line_height(t_ray *ray, double *z_buffer)
 
 	h = WIN_HEIGHT;
 	*z_buffer = ray->perp_dist_wall;
-	ray->line_height = (int)(h / ray->perp_dist_wall);
+	ray->line_height = (h / ray->perp_dist_wall);
 	ray->draw_start = (-ray->line_height / 2) + (h / 2);
 	if (ray->draw_start < 0)
 		ray->draw_start = 0;

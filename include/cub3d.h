@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 13:32:53 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 15:36:41 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ typedef struct s_ray
 	double		dir_y;
 
 	/** Height of objects to prevent fish eye (triangule leg). */
-	int			line_height;
+	double		line_height;
 
 	int			draw_start;
 
@@ -214,10 +214,10 @@ typedef struct s_cal
 {
 	/** Vertical increment in texture per screen pixel
 	 * `(texture_height / line_height)` */
-	int		step;
+	double	step;
 
 	/** Vertical coordinate in the texture used while iterating pixels. */
-	int		text_y;
+	double	text_y;
 
 	/** Horizontal coordinate in the texture corresponding to wall hit. */
 	double	text_x;
@@ -296,11 +296,11 @@ void	map_raycasting(t_game *game, t_map *map);
 void	move_player(t_game *game);
 void	precal_camera_factors(double *cam_factor);
 void	put_pixel(t_image *img, int x, int y, int color);
-void	render_frame(t_ray *ray, t_image *img, t_game *game);
+void	render_frame(t_ray *ray, t_game *game);
 void	renderize_roof_floor(t_game *game);
 void	get_direction(t_ray *ray);
 void	calculate_line_height(t_ray *ray, double *z_buffer);
-void	render_loop_calculations(t_ray *ray, t_image *img, t_cal *cal);
+void	render_loop_calculations(t_ray *ray, t_game *game, t_cal *cal);
 
 /* -------------------------------------------------------------------------- */
 /*   Function prototypes — int                                                */

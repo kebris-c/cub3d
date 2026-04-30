@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 09:22:43 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 13:48:31 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 14:41:35 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	renderize_roof_floor(t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 }
 
-void	render_frame(t_ray *ray, t_image *img, t_game *game)
+void	render_frame(t_ray *ray, t_game *game)
 {
 	t_cal	cal;
 	int		color;
@@ -44,11 +44,12 @@ void	render_frame(t_ray *ray, t_image *img, t_game *game)
 	x = 0;
 	while (x < WIN_WIDTH)
 	{
-		render_loop_calculations(&ray[x], img, &cal);
+		render_loop_calculations(&ray[x], game, &cal);
 		y = ray[x].draw_start;
 		while (y < ray[x].draw_end)
 		{
-			color = get_texel(&game->textures[ray[x].dir_id], (int)cal.text_x, cal.text_y);
+			color = get_texel(&game->textures[ray[x].dir_id],
+					(int)cal.text_x, (int)cal.text_y);
 			if (ray[x].side == 0)
 				put_pixel(&game->frame, x, y, color);
 			else
