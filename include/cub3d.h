@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 19:11:59 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/24 14:43:52 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 08:42:09 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,7 @@ void	render_frame(t_ray *ray, t_image *img, t_game *game);
 void	move_player(t_game *game);
 void	renderize_roof_floor(t_game *game);
 void	get_direction(t_ray *ray);
+void	calculate_line_height(t_ray *ray, double *z_buffer);
 
 int		parse_cub_file(t_config *cfg, const char *path);
 int		parse_map_into_cfg(t_config *cfg, char **lines, int start);

@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/24 11:26:21 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 08:41:26 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ static t_tex_id	get_tex_id(t_ray *ray)
 	else
 	{
 		if (ray->dir_y > 0)
-			return (SO);
-		else
 			return (NO);
+		else
+			return (SO);
 	}
 }
 

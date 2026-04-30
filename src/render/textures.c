@@ -6,7 +6,7 @@
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/23 10:21:26 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/24 14:51:39 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/04/30 08:43:24 by kjroydev         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ double	calculate_pixel_hit(t_ray *ray, t_image img)
 	double	wall_x;
 
 	if (ray->side == 0)
-		wall_x = ray->perp_dist_wall + ray->player_y * ray->dir_y;
+		wall_x = ray->player_y + ray->perp_dist_wall * ray->dir_y;
 	else
-		wall_x = ray->perp_dist_wall + ray->player_x * ray->dir_x;
+		wall_x = ray->player_x + ray->perp_dist_wall * ray->dir_x;
 	wall_x = wall_x - floor(wall_x);
 	ray->text_x = wall_x * img.width;
 }
