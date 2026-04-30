@@ -49,7 +49,7 @@ int	main(int argc, char **argv)
 	t_game	*game;
 
 	if (argc != 2)
-		return (error_msg("usage: ./cub3D maps/valid.cub"));
+		return (error_msg("usage: ./cub3D path/to/scene.cub"));
 	if (!file_has_extension(argv[1], ".cub"))
 		return (error_msg("map file must use .cub extension"));
 	game = ft_calloc(1, sizeof(*game));
@@ -58,7 +58,9 @@ int	main(int argc, char **argv)
 	if (parse_and_init_graphics(game, argv[1]) == EXIT_FAILURE)
 		return (cleanup_game(game), free_game_struct(game), EXIT_FAILURE);
 	register_hooks(game);
+	cub_signals_install();
 	mlx_loop(game->mlx);
+	cub_signals_restore();
 	cleanup_game(game);
 	free_game_struct(game);
 	return (EXIT_SUCCESS);

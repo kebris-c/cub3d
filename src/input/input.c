@@ -53,9 +53,15 @@ int	game_loop(void *param)
 	t_game	*game;
 
 	game = (t_game *)param;
+	if (cub_signal_stop_requested())
+	{
+		mlx_loop_end(game->mlx);
+		return (0);
+	}
 	renderize_roof_floor(game);
 	move_player(game);
 	map_raycasting(game, &game->cfg.map);
-	render_frame(game->ray, &game->frame, game);
+	render_frame(game->ray, &game->frame);
+	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 	return (0);
 }

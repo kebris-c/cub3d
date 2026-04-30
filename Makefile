@@ -23,14 +23,17 @@ SRCS		=	src/common/utils.c				\
 				src/input/input.c				\
 				src/io/file_loader.c			\
 				src/lifecycle/game_cleanup.c	\
+				src/lifecycle/signals.c			\
 				src/movement/movement.c			\
 				src/parsers/parse_utils.c 		\
+				src/parsers/parse_header_tokenize.c 		\
 				src/parsers/parse_header.c 		\
 				src/parsers/parse_map_grid.c	\
 				src/parsers/parse_map.c			\
 				src/raycasting/rays.c			\
 				src/render/render.c				\
-				src/validate/map_validate.c		
+				src/validate/map_validate.c		\
+				src/validate/map_floodfill.c		
 
 OBJS		= $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS		= $(OBJS:.o=.d) $(MAIN_OBJ:.o=.d)
