@@ -24,7 +24,7 @@ static double	calculate_wall_hit(t_ray *ray, t_image *img)
 	wall_x = wall_x - floor(wall_x);
 	tex_x = wall_x * img->width;
 	if ((ray->side == 0 && ray->dir_x < 0) ||
-		(ray->side == 1 && ray->dir_y < 0))
+		(ray->side == 1 && ray->dir_y > 0))
 		tex_x = img->width - tex_x - 1;
 	return (tex_x);
 }
