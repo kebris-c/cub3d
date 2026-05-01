@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 17:57:37 by kjroydev          #+#    #+#             */
-/*   Updated: 2026/04/30 08:41:26 by kjroydev         ###   ########.fr       */
+/*   Updated: 2026/05/01 17:17:08 by kmarrero         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ static t_tex_id	get_tex_id(t_ray *ray)
 {
 	if (ray->side == 0)
 	{
-		if (ray->dir_x > 0)
-			return (EA);
-		else
+		if (ray->step_x > 0)
 			return (WE);
+		else
+			return (EA);
 	}
 	else
 	{
-		if (ray->dir_y > 0)
+		if (ray->step_y > 0)
 			return (NO);
 		else
 			return (SO);
