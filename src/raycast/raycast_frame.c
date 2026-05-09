@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   father.c                                           :+:      :+:    :+:   */
+/*   raycast_frame.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,21 +12,21 @@
 
 #include "cub3d.h"
 
-void	map_raycasting(t_game *game, t_map *map)
+void	run_raycast_for_entire_frame(t_game *game, t_map *map)
 {
 	double		cam_factor[WIN_WIDTH];
 	t_ray		*ray;
 	int			x;
 
 	x = 0;
-	precal_camera_factors(cam_factor);
+	init_screen_column_camera_factors(cam_factor);
 	while (x < WIN_WIDTH)
 	{
 		ray = &game->ray[x];
-		cast_rays(&game->player, ray, cam_factor[x]);
-		dda_loop(ray, map);
-		calculate_line_height(ray, &game->render.z_buffer[x]);
-		get_direction(ray);
+		ray_init_column_dir_from_player(&game->player, ray, cam_factor[x]);
+		ray_run_dda(ray, map);
+		ray_compute_wall_strip_vertical_span(ray, &game->render.z_buffer[x]);
+		ray_assign_wall_texture_by_hit_side(ray);
 		x++;
 	}
 }

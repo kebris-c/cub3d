@@ -13,30 +13,46 @@
 #include "cub3d.h"
 #include <signal.h>
 
-static volatile sig_atomic_t	g_caught_signal;
+/**
+ * @brief Function that returns a pointer to the exit flag.
+ * 
+ * This function returns a pointer to the exit flag. This is used to
+ * store the exit flag in a static variable.
+ * 
+ * @return A pointer to the exit flag.
+ *
+ * You can avoid globals by using a pointer to a static variable.
+ */
+
+static volatile sig_atomic_t	*signals_exit_flag_storage(void)
+{
+	static volatile sig_atomic_t	v;
+
+	return (&v);
+}
 
 static void	sig_handler(int signum)
 {
 	(void)signum;
-	g_caught_signal = 1;
+	*signals_exit_flag_storage() = 1;
 }
 
-void	cub_signals_install(void)
+void	signals_install(void)
 {
-	g_caught_signal = 0;
+	*signals_exit_flag_storage() = 0;
 	signal(SIGINT, sig_handler);
 	signal(SIGQUIT, sig_handler);
 	signal(SIGTSTP, SIG_IGN);
 }
 
-void	cub_signals_restore(void)
+void	signals_restore(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGTSTP, SIG_DFL);
 }
 
-int	cub_signal_stop_requested(void)
+int	signals_exit_was_requested(void)
 {
-	return (g_caught_signal != 0);
+	return (*signals_exit_flag_storage() != 0);
 }

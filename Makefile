@@ -14,30 +14,30 @@ LIBFT_FLAG	= -L$(LIBFT_DIR) -lft
 OBJ_DIR		= objs
 
 # Entry point: separate object + dependency file (not mixed into SRCS).
-MAIN_SRC	= src/core/main.c
-MAIN_OBJ	= $(OBJ_DIR)/src/core/main.o
+MAIN_SRC	= src/entry/main.c
+MAIN_OBJ	= $(OBJ_DIR)/src/entry/main.o
 
-SRCS		=	src/common/utils.c					\
-				src/init/game.c						\
-				src/init/player.c					\
-				src/input/input.c					\
-				src/io/file_loader.c				\
-				src/lifecycle/game_cleanup.c		\
-				src/lifecycle/signals.c				\
-				src/movement/movement.c				\
-				src/parsers/parse_utils.c 			\
-				src/parsers/parse_header_tokenize.c	\
-				src/parsers/parse_header.c 			\
-				src/parsers/parse_map_grid.c		\
-				src/parsers/parse_map.c				\
-				src/raycasting/directions.c			\
-				src/raycasting/father.c				\
-				src/raycasting/ray_utils.c			\
-				src/raycasting/rays.c				\
-				src/render/renderize.c				\
-				src/render/textures.c				\
-				src/validate/map_validate.c			\
-				src/validate/map_floodfill.c		
+SRCS		=	src/helpers/utils.c						\
+				src/setup/game.c						\
+				src/setup/player.c						\
+				src/input/input.c						\
+				src/files/file_loader.c					\
+				src/runtime/game_cleanup.c				\
+				src/runtime/signals.c					\
+				src/player_motion/player_move.c			\
+				src/parser/parser_text_helpers.c 		\
+				src/parser/parse_header_tokenize.c		\
+				src/parser/parse_header.c 				\
+				src/parser/parse_map_grid.c				\
+				src/parser/parse_map.c					\
+				src/raycast/raycast_frame.c				\
+				src/raycast/ray_column_screen.c			\
+				src/raycast/ray_dda_walk.c				\
+				src/raycast/ray_wall_face_texture.c		\
+				src/render/draw_frame_surfaces.c		\
+				src/render/draw_wall_texture_column.c	\
+				src/map_check/map_validate.c			\
+				src/map_check/map_enclosure_bfs.c		
 
 OBJS		= $(SRCS:%.c=$(OBJ_DIR)/%.o)
 DEPS		= $(OBJS:.o=.d) $(MAIN_OBJ:.o=.d)

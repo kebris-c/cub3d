@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   renderize.c                                        :+:      :+:    :+:   */
+/*   draw_frame_surfaces.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-void	renderize_roof_floor(t_game *game)
+void	draw_fullscreen_ceiling_floor(t_game *game)
 {
 	int	x;
 	int	y;
@@ -34,27 +34,27 @@ void	renderize_roof_floor(t_game *game)
 	mlx_put_image_to_window(game->mlx, game->win, game->frame.img, 0, 0);
 }
 
-void	render_frame(t_ray *ray, t_game *game)
+void	draw_textured_wall_columns(t_ray *ray, t_game *game)
 {
-	t_cal	cal;
-	int		color;
-	int		x;
-	int		y;
+	t_wall_tex_column	texcol;
+	int					color;
+	int					x;
+	int					y;
 
 	x = 0;
 	while (x < WIN_WIDTH)
 	{
-		render_loop_calculations(&ray[x], game, &cal);
+		wall_strip_prepare_tex_coords(&ray[x], game, &texcol);
 		y = ray[x].draw_start;
 		while (y < ray[x].draw_end)
 		{
 			color = get_texel(&game->textures[ray[x].dir_id],
-					(int)cal.text_x, (int)cal.text_y);
+					(int)texcol.tex_column, (int)texcol.tex_row);
 			if (ray[x].side == 0)
 				put_pixel(&game->frame, x, y, color);
 			else
 				put_pixel(&game->frame, x, y, color);
-			cal.text_y += cal.step;
+			texcol.tex_row += texcol.row_step;
 			y++;
 		}
 		x++;

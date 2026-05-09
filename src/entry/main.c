@@ -16,7 +16,7 @@
 ** Program entry: validate CLI, heap-allocate t_game (large ray buffers),
 ** parse .cub, init MLX, register hooks, run the main loop, then teardown.
 */
-static void	free_game_struct(t_game *game)
+static void	free_game_heap_block(t_game *game)
 {
 	if (!game)
 		return ;
@@ -24,7 +24,7 @@ static void	free_game_struct(t_game *game)
 }
 
 /* Loads scene file and graphics; returns EXIT_FAILURE on parse or MLX init. */
-static int	parse_and_init_graphics(t_game *game, const char *cub_path)
+static int	load_scene_and_init_mlx(t_game *game, const char *cub_path)
 {
 	game->cfg.floor_color = -1;
 	game->cfg.ceil_color = -1;
@@ -36,7 +36,7 @@ static int	parse_and_init_graphics(t_game *game, const char *cub_path)
 }
 
 /* Wires keyboard, window close, and per-frame callback into miniLibX. */
-static void	register_hooks(t_game *game)
+static void	register_mlx_hooks(t_game *game)
 {
 	mlx_hook(game->win, 2, 1L << 0, key_press, game);
 	mlx_hook(game->win, 3, 1L << 1, key_release, game);
@@ -55,13 +55,13 @@ int	main(int argc, char **argv)
 	game = ft_calloc(1, sizeof(*game));
 	if (!game)
 		return (error_msg("malloc failed"));
-	if (parse_and_init_graphics(game, argv[1]) == EXIT_FAILURE)
-		return (cleanup_game(game), free_game_struct(game), EXIT_FAILURE);
-	register_hooks(game);
-	cub_signals_install();
+	if (load_scene_and_init_mlx(game, argv[1]) == EXIT_FAILURE)
+		return (cleanup_game(game), free_game_heap_block(game), EXIT_FAILURE);
+	register_mlx_hooks(game);
+	signals_install();
 	mlx_loop(game->mlx);
-	cub_signals_restore();
+	signals_restore();
 	cleanup_game(game);
-	free_game_struct(game);
+	free_game_heap_block(game);
 	return (EXIT_SUCCESS);
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ray_utils.c                                        :+:      :+:    :+:   */
+/*   ray_column_screen.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kjroydev <kjroydev@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-void	precal_camera_factors(double *cam_factor)
+void	init_screen_column_camera_factors(double *cam_factor)
 {
 	int	x;
 
@@ -37,7 +37,7 @@ void	precal_camera_factors(double *cam_factor)
  * @param z_buffer array with `n` vectors lenght, that stores every ray
  * perpendicular distance ()
  */
-void	calculate_line_height(t_ray *ray, double *z_buffer)
+void	ray_compute_wall_strip_vertical_span(t_ray *ray, double *z_buffer)
 {
 	int	h;
 

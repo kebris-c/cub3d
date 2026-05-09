@@ -53,14 +53,14 @@ int	game_loop(void *param)
 	t_game	*game;
 
 	game = (t_game *)param;
-	if (cub_signal_stop_requested())
+	if (signals_exit_was_requested())
 	{
 		mlx_loop_end(game->mlx);
 		return (0);
 	}
-	renderize_roof_floor(game);
+	draw_fullscreen_ceiling_floor(game);
 	move_player(game);
-	map_raycasting(game, &game->cfg.map);
-	render_frame(game->ray, game);
+	run_raycast_for_entire_frame(game, &game->cfg.map);
+	draw_textured_wall_columns(game->ray, game);
 	return (0);
 }

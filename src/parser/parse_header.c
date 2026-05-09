@@ -46,13 +46,13 @@ static int	parse_identifier_line(t_config *cfg, const char *id,
 	{
 		if (cfg->floor_color != -1)
 			return (error_msg("duplicated F color"));
-		return (cub_parse_rgb_triplet(value, &cfg->floor_color));
+		return (parser_parse_rgb_components(value, &cfg->floor_color));
 	}
 	if (ft_strncmp(id, "C", 2) == 0)
 	{
 		if (cfg->ceil_color != -1)
 			return (error_msg("duplicated C color"));
-		return (cub_parse_rgb_triplet(value, &cfg->ceil_color));
+		return (parser_parse_rgb_components(value, &cfg->ceil_color));
 	}
 	return (error_msg("unknown identifier in header"));
 }
@@ -65,13 +65,13 @@ int	parse_header_line(t_config *cfg, const char *line)
 	int		ret;
 
 	i = 0;
-	id = cub_next_token(line, &i);
+	id = parser_next_token(line, &i);
 	if (!id)
 		return (EXIT_SUCCESS);
-	value = cub_next_token(line, &i);
+	value = parser_next_token(line, &i);
 	if (!value)
 		return (free(id), error_msg("header value missing"));
-	ret = cub_ensure_no_extra_tokens(line, i);
+	ret = parser_header_line_has_no_trailing_tokens(line, i);
 	if (ret == EXIT_SUCCESS)
 		ret = parse_identifier_line(cfg, id, value);
 	free(value);
