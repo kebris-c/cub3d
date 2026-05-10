@@ -180,26 +180,42 @@ typedef struct s_config
 	char	player_dir;
 }	t_config;
 
-typedef struct s_ff_state
+/**
+ * @struct s_map_bfs_ctx
+ * @brief Internal state for BFS from the player to verify the map is closed.
+ */
+typedef struct s_map_bfs_ctx
 {
+	/** configuration of the game */
 	t_config		*cfg;
-	unsigned char	*seen;
-	int				*q;
-	int				ht[2];
-}	t_ff_state;
+	/** visited cells of the map */
+	unsigned char	*visited;
+	/** queue of cells to visit */
+	int				*queue;
+	/** head of the queue */
+	int				queue_head;
+	/** tail of the queue */
+	int				queue_tail;
+}	t_map_bfs_ctx;
 
 typedef struct s_player
 {
+	/** x position of the player */	
 	double	x;
+	/** y position of the player */
 	double	y;
+	/** direction of the player in x */
 	double	dir_x;
+	/** direction of the player in y */
 	double	dir_y;
+	/** plane of the player in x */
 	double	plane_x;
+	/** plane of the player in y */
 	double	plane_y;
 }	t_player;
 
 /**
- * @struct s_cal
+ * @struct s_wall_tex_column
  * @brief Temporary structure used during wall rendering to map screen pixels
  *        to texture coordinates.
  *
@@ -212,18 +228,18 @@ typedef struct s_player
  *
  * - text_y: Vertical coordinate in the texture used while iterating pixels.
  */
-typedef struct s_cal
+typedef struct s_wall_tex_column
 {
 	/** Vertical increment in texture per screen pixel
 	 * `(texture_height / line_height)` */
-	double	step;
+	double	row_step;
 
 	/** Vertical coordinate in the texture used while iterating pixels. */
-	double	text_y;
+	double	tex_row;
 
 	/** Horizontal coordinate in the texture corresponding to wall hit. */
-	double	text_x;
-}	t_cal;
+	double	tex_column;
+}	t_wall_tex_column;
 
 /**
  * @struct s_game
@@ -287,32 +303,35 @@ typedef struct s_game
 /*   Function prototypes — void                                               */
 /* -------------------------------------------------------------------------- */
 
-void	cast_rays(t_player *player, t_ray *ray, double cam_factor);
+void	ray_init_column_dir_from_player(
+			t_player *player, t_ray *ray, double cam_factor);
 void	cleanup_game(t_game *game);
-void	cub_signals_install(void);
-void	cub_signals_restore(void);
+void	signals_install(void);
+void	signals_restore(void);
 void	free_config(t_config *cfg);
 void	free_lines(char **lines);
 void	init_player(t_game *game);
-void	map_raycasting(t_game *game, t_map *map);
+void	run_raycast_for_entire_frame(t_game *game, t_map *map);
 void	move_player(t_game *game);
-void	precal_camera_factors(double *cam_factor);
+void	init_screen_column_camera_factors(double *cam_factor);
 void	put_pixel(t_image *img, int x, int y, int color);
-void	render_frame(t_ray *ray, t_game *game);
-void	renderize_roof_floor(t_game *game);
-void	get_direction(t_ray *ray);
-void	calculate_line_height(t_ray *ray, double *z_buffer);
-void	render_loop_calculations(t_ray *ray, t_game *game, t_cal *cal);
+void	draw_textured_wall_columns(t_ray *ray, t_game *game);
+void	draw_fullscreen_ceiling_floor(t_game *game);
+void	ray_assign_wall_texture_by_hit_side(t_ray *ray);
+void	ray_compute_wall_strip_vertical_span(t_ray *ray, double *z_buffer);
+void	wall_strip_prepare_tex_coords(
+			t_ray *ray,
+			t_game *game,
+			t_wall_tex_column *texcol);
 
 /* -------------------------------------------------------------------------- */
 /*   Function prototypes — int                                                */
 /* -------------------------------------------------------------------------- */
 
 int		close_window(t_game *game);
-int		cub_signal_stop_requested(void);
-int		cub_ensure_no_extra_tokens(const char *s, size_t i);
-int		cub_parse_rgb_triplet(const char *value, int *out_color);
-int		dda_loop(t_ray *ray, t_map *map);
+int		signals_exit_was_requested(void);
+int		parser_header_line_has_no_trailing_tokens(const char *s, size_t i);
+int		parser_parse_rgb_components(const char *value, int *out_color);
 int		error_msg(const char *msg);
 int		file_has_extension(const char *file, const char *ext);
 int		game_loop(void *param);
@@ -328,8 +347,9 @@ int		load_file_lines(const char *path, char ***lines);
 int		parse_cub_file(t_config *cfg, const char *path);
 int		parse_header_line(t_config *cfg, const char *line);
 int		parse_map_into_cfg(t_config *cfg, char **lines, int start);
+int		ray_run_dda(t_ray *ray, t_map *map);
 int		rgb_to_int(int r, int g, int b);
-int		map_is_closed(t_config *cfg);
+int		validate_map_is_closed_bfs(t_config *cfg);
 int		validate_map(t_config *cfg);
 
 /* -------------------------------------------------------------------------- */
@@ -337,7 +357,7 @@ int		validate_map(t_config *cfg);
 /* -------------------------------------------------------------------------- */
 
 char	*trim_spaces(const char *line);
-char	*cub_next_token(const char *s, size_t *i);
+char	*parser_next_token(const char *s, size_t *i);
 
 /* -------------------------------------------------------------------------- */
 /*   Function prototypes — size_t                                             */

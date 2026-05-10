@@ -26,3 +26,7 @@
 /.idea/
 *.swp
 *~
+
+# Personal / local only (never commit): LSP, clangd, editor
+/compile_commands.json
+/.clangd

@@ -17,7 +17,7 @@ static int	is_ws(int c)
 	return (c == ' ' || c == '\t');
 }
 
-char	*cub_next_token(const char *s, size_t *i)
+char	*parser_next_token(const char *s, size_t *i)
 {
 	size_t	start;
 	size_t	end;
@@ -33,7 +33,7 @@ char	*cub_next_token(const char *s, size_t *i)
 	return (ft_substr(s, start, end - start));
 }
 
-int	cub_ensure_no_extra_tokens(const char *s, size_t i)
+int	parser_header_line_has_no_trailing_tokens(const char *s, size_t i)
 {
 	while (s[i] && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
 		i++;
@@ -64,7 +64,7 @@ static int	parse_rgb_component(const char *value, size_t *i, int *out)
 	return (EXIT_SUCCESS);
 }
 
-int	cub_parse_rgb_triplet(const char *value, int *out_color)
+int	parser_parse_rgb_components(const char *value, int *out_color)
 {
 	int		rgb[3];
 	size_t	i;

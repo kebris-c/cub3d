@@ -35,7 +35,7 @@ int	is_map_line(const char *line)
 
 static int	map_all_walkables_enclosed(t_config *cfg)
 {
-	return (map_is_closed(cfg));
+	return (validate_map_is_closed_bfs(cfg));
 }
 
 static int	register_spawn(t_config *cfg, int x, int y, int *found)

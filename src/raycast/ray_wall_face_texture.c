@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   directions.c                                       :+:      :+:    :+:   */
+/*   ray_wall_face_texture.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmarrero <kmarrero@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-static t_tex_id	get_tex_id(t_ray *ray)
+static t_tex_id	wall_texture_id_from_ray_step(t_ray *ray)
 {
 	if (ray->side == 0)
 	{
@@ -30,11 +30,11 @@ static t_tex_id	get_tex_id(t_ray *ray)
 	}
 }
 
-void	get_direction(t_ray *ray)
+void	ray_assign_wall_texture_by_hit_side(t_ray *ray)
 {
 	t_tex_id	id;
 
-	id = get_tex_id(ray);
+	id = wall_texture_id_from_ray_step(ray);
 	if (id >= 0 && id < 4)
 		ray->dir_id = id;
 }
